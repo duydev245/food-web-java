@@ -32,34 +32,28 @@ body {
 
 .form-signin input[type="name"] {
     margin-bottom: 10px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
 }
 
 .form-signin input[type="email"] {
     margin-bottom: 10px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
 }
 
 .form-signin input[type="password"] {
     margin-bottom: 10px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
 }
 
 .btn-submit {
     color: white;
     background-color: var(--primaryBlue);
     width: 100%;
-    font-size: 1.25rem; 
-    padding: 10px 20px; 
+    font-size: 1.25rem;
+    padding: 12px 20px;
     border: none;
-    border-radius: 10px;
-    cursor: pointer; 
+    border-radius: 5px;
+    cursor: pointer;
     font-weight: bold;
-  }
+}
 
-  .btn-submit:hover {
+.btn-submit:hover {
     background-color: #002f68fc;
-  }
+}

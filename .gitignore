@@ -1,0 +1,2 @@
+# Ignore the jdbc.jar file in the lib directory
+/FoodWeb/lib/jdbc.jar
