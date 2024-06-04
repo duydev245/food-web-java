@@ -1,6 +1,9 @@
 USE MASTER
 GO
 
+DROP DATABASE IF EXISTS DBFOODWEB 
+GO
+
 CREATE DATABASE DBFOODWEB
 GO
 
@@ -31,9 +34,9 @@ GO
 
 CREATE TABLE Accounts (
     id              INT PRIMARY KEY IDENTITY,
-    username        NVARCHAR(255) NOT NULL,
-    [password]      NVARCHAR(MAX) NOT NULL,
     full_name       NVARCHAR(255) NOT NULL,
+    [password]      NVARCHAR(MAX) NOT NULL,
+    email			NVARCHAR(255) NOT NULL,
     phone           NVARCHAR(20),
     [address]       NVARCHAR(255),
     ward_id         SMALLINT,
@@ -41,7 +44,6 @@ CREATE TABLE Accounts (
     city_id         SMALLINT,
     [role]          BIT NOT NULL DEFAULT 1,
     [status]        BIT NOT NULL DEFAULT 1,
-    avatar_image    IMAGE,
     FOREIGN KEY (city_id) REFERENCES City(id),
     FOREIGN KEY (district_id) REFERENCES District(id),
     FOREIGN KEY (ward_id) REFERENCES Ward(id)

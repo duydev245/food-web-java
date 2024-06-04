@@ -30,10 +30,6 @@ body {
     z-index: 2;
 }
 
-.form-signin input[type="name"] {
-    margin-bottom: 10px;
-}
-
 .form-signin input[type="email"] {
     margin-bottom: 10px;
 }
@@ -52,6 +48,7 @@ body {
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
+    transition: 0.5s;
 }
 
 .btn-submit:hover {

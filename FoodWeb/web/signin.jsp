@@ -16,7 +16,7 @@
             />
 
         <!-- my css -->
-        <link rel="stylesheet" href="./css/styleSignInUo.css" />
+        <link rel="stylesheet" href="./css/styleSignIn.css" />
     </head>
     <body class="text-center">
         <main class="form-signin">
@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <a href="signup.jsp">Đăng ký tài khoản</a>
+                    <a href="registerForm.jsp">Đăng ký tài khoản</a>
                 </div>
                 <button class="btn-submit" type="submit" value="signin" name="action">
                     Đăng Nhập
