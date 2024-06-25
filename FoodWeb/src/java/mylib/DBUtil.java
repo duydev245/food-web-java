@@ -28,7 +28,7 @@ public class DBUtil {
         // Account's password
         String pwd = "12345";
         // Database name
-        String db = "DBJAVAWEB";
+        String db = "DBFOODWEB";
         String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
         String url = "jdbc:sqlserver://" + IP + "\\" + instanceName + ":" + port
                 + ";databasename=" + db + ";user=" + uid + ";password=" + pwd;

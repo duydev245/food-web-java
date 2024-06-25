@@ -42,7 +42,7 @@ CREATE TABLE Accounts (
     ward_id         SMALLINT,
     district_id     SMALLINT,
     city_id         SMALLINT,
-    [role]          BIT NOT NULL DEFAULT 1,
+    [role]          NVARCHAR(20) DEFAULT 'user',
     [status]        BIT NOT NULL DEFAULT 1,
     FOREIGN KEY (city_id) REFERENCES City(id),
     FOREIGN KEY (district_id) REFERENCES District(id),
@@ -66,12 +66,10 @@ GO
 CREATE TABLE Menu (
     id              INT PRIMARY KEY IDENTITY,
     [name]          NVARCHAR(255),
-    create_account  INT,
     [period]        TINYINT CHECK ([period] IN (1,2,3)),
     day_of_week     TINYINT CHECK (day_of_week IN (2,3,4,5,6,7,8)),
     [description]   TEXT,
     [status]        BIT DEFAULT 1,
-    FOREIGN KEY (create_account) REFERENCES Accounts(id)
 );
 GO
 
@@ -94,23 +92,14 @@ CREATE TABLE Menu_Dishes (
 );
 GO
 
-CREATE TABLE Recipes (
-    id              SMALLINT        PRIMARY KEY IDENTITY,
-    dish_id         SMALLINT        NOT NULL,
-    [description]   TEXT,
-    instructions    TEXT,
-    [status]        BIT,
-    FOREIGN KEY (dish_id) REFERENCES Dishes(id)
-);
-GO
-
-CREATE TABLE Recipe_Ingredients (
-    recipe_id               SMALLINT NOT NULL,
+CREATE TABLE Dish_Ingredients (
+    dish_id               SMALLINT NOT NULL,
     ingredient_id           SMALLINT NOT NULL,
     ingredient_quantity     SMALLINT,
     unit                    VARCHAR(50),
-    PRIMARY KEY (recipe_id, ingredient_id),
-    FOREIGN KEY (recipe_id) REFERENCES Recipes(id),
+    PRIMARY KEY (dish_id, ingredient_id),
+
+    FOREIGN KEY (dish_id) REFERENCES Dishes(id),
     FOREIGN KEY (ingredient_id) REFERENCES Ingredients(id)
 );
 GO
@@ -146,32 +135,11 @@ CREATE TABLE Order_Details (
 );
 GO
 
-CREATE TABLE Cart (
-    id              SMALLINT IDENTITY(1,1) PRIMARY KEY,
-    account_id      INT,
-    [status]        BIT DEFAULT 1,
-    created_date    DATETIME DEFAULT GETDATE(),
-    FOREIGN KEY (account_id) REFERENCES Accounts(id)
-);
-GO
-
-CREATE TABLE CartItems (
-    id              INT IDENTITY(1,1) PRIMARY KEY,
-    cart_id         SMALLINT NOT NULL,
-    recipe_id       SMALLINT NOT NULL,
-    quantity        INT DEFAULT 1,
-    FOREIGN KEY (cart_id) REFERENCES Cart(id),
-    FOREIGN KEY (recipe_id) REFERENCES Recipes(id)
-);
-GO
-
 CREATE TABLE Customer_Plan (
     id              INT PRIMARY KEY,
     account_id      INT,
-    [period]        TINYINT CHECK ([period] IN (1,2,3)),
-    day_of_week     TINYINT CHECK (day_of_week IN (2,3,4,5,6,7,8)),
-    dish_id         SMALLINT,
+    menu_id         INT,
     FOREIGN KEY (account_id) REFERENCES Accounts(id),
-    FOREIGN KEY (dish_id) REFERENCES Dishes(id)
+    FOREIGN KEY (menu_id) REFERENCES Menu(id)
 );
 GO
