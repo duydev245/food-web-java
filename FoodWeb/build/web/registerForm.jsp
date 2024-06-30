@@ -29,7 +29,7 @@
                   <div class="row g-0">
                     <div class="col-6 p-5">
                       <h3 class="mb-5" style="color: #02489d">
-                        Thông tin chung
+                        General Information
                       </h3>
 
                       <div class="form-floating mb-4 pb-2">
@@ -40,7 +40,7 @@
                           id="floatingInput"
                           placeholder="name"
                         />
-                        <label for="floatingInput">Họ và tên</label>
+                        <label for="floatingInput">Full Name</label>
                       </div>
 
                       <div class="form-floating mb-4 pb-2">
@@ -51,7 +51,7 @@
                           id="floatingInput"
                           placeholder="password"
                         />
-                        <label for="floatingInput">Mật khẩu</label>
+                        <label for="floatingInput">Password</label>
                       </div>
 
                       <div class="form-floating mb-4 pb-2">
@@ -73,18 +73,18 @@
                           id="floatingInput"
                           placeholder="phone"
                         />
-                        <label for="floatingInput">Số điện thoại</label>
+                        <label for="floatingInput">Phone Number</label>
                       </div>
 
                       <div class="mb-4 mx-1">
-                        <a href="signin.jsp" style="text-decoration: none;">Đăng nhập tài khoản</a>
+                        <a href="signin.jsp" style="text-decoration: none;">Sign In</a>
                       </div>
 
                       <p class="mb-4 mx-1 text-muted">&copy; May 2024</p>
                     </div>
 
                     <div class="col-6 p-5 bg-indigo">
-                      <h3 class="mb-5 text-white">Thông tin chi tiết</h3>
+                      <h3 class="mb-5 text-white">Details Information</h3>
 
                       <div class="form-floating mb-4 pb-2">
                         <input
@@ -94,7 +94,7 @@
                           id="floatingInput"
                           placeholder="address"
                         />
-                        <label for="floatingInput">Địa chỉ</label>
+                        <label for="floatingInput">Address</label>
                       </div>
 
                       <div class="mb-4 pb-2">
@@ -102,10 +102,10 @@
                           class="form-select form-select-lg"
                           name="txtward"
                         >
-                          <option>Phường (Xã)</option>
-                          <option value="1">Phường 1</option>
-                          <option value="2">Phường 2</option>
-                          <option value="3">Phường 3</option>
+                          <option>Ward</option>
+                          <option value="1">Ward 1</option>
+                          <option value="2">Ward 2</option>
+                          <option value="3">Ward 3</option>
                         </select>
                       </div>
 
@@ -114,10 +114,10 @@
                           class="form-select form-select-lg"
                           name="txtdistrict"
                         >
-                          <option>Quận (Huyện)</option>
-                          <option value="1">Quận 1</option>
-                          <option value="2">Quận 2</option>
-                          <option value="3">Quận 3</option>
+                          <option>District</option>
+                          <option value="1">Dictrict 1</option>
+                          <option value="2">Dictrict 2</option>
+                          <option value="3">Dictrict 3</option>
                         </select>
                       </div>
 
@@ -126,10 +126,10 @@
                           class="form-select form-select-lg"
                           name="txtcity"
                         >
-                          <option>Thành Phố (Tỉnh)</option>
-                          <option value="1">TP.Hồ Chí Minh</option>
-                          <option value="2">Tỉnh Đồng Nai</option>
-                          <option value="3">Tỉnh Bình Dương</option>
+                          <option>City (Province)</option>
+                          <option value="1">Ho Chi Minh City</option>
+                          <option value="2">Dong Nai Province</option>
+                          <option value="3">Binh Duong Province</option>
                         </select>
                       </div>
 
@@ -139,7 +139,7 @@
                         value="saveuser"
                         name="action"
                       >
-                        Đăng Ký
+                        Register
                       </button>
                     </div>
                   </div>

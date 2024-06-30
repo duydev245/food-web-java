@@ -21,7 +21,7 @@
     <body class="text-center">
         <main class="form-signin">
             <form action="MainController">
-                <h1 class="mb-4 fw-bold">Đăng nhập</h1>
+                <h1 class="mb-4 fw-bold">Sign In</h1>
 
                 <div class="form-floating">
                     <input
@@ -46,10 +46,10 @@
                 </div>
 
                 <div class="mb-3">
-                    <a href="registerForm.jsp">Đăng ký tài khoản</a>
+                    <a href="registerForm.jsp">Register Account</a>
                 </div>
                 <button class="btn-submit" type="submit" value="signin" name="action">
-                    Đăng Nhập
+                    Sign In
                 </button>
                 <p class="mt-5 mb-3 text-muted">&copy; May 2024</p>
             </form>
