@@ -106,6 +106,8 @@
                           <option value="1">Ward 1</option>
                           <option value="2">Ward 2</option>
                           <option value="3">Ward 3</option>
+                          <option value="4">Ward 4</option>
+                          <option value="5">Ward 5</option>
                         </select>
                       </div>
 
@@ -118,6 +120,8 @@
                           <option value="1">Dictrict 1</option>
                           <option value="2">Dictrict 2</option>
                           <option value="3">Dictrict 3</option>
+                          <option value="4">Dictrict 4</option>
+                          <option value="5">Dictrict 5</option>
                         </select>
                       </div>
 
@@ -128,8 +132,6 @@
                         >
                           <option>City (Province)</option>
                           <option value="1">Ho Chi Minh City</option>
-                          <option value="2">Dong Nai Province</option>
-                          <option value="3">Binh Duong Province</option>
                         </select>
                       </div>
 

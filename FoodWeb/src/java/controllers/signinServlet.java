@@ -5,12 +5,15 @@
  */
 package controllers;
 
+import dao.AccountDAO;
+import dto.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -32,7 +35,25 @@ public class signinServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            out.print("<h1>Sign In</h1>");
+            String email = request.getParameter("txtemail");
+            String password = request.getParameter("txtpassword");
+            
+            AccountDAO d = new AccountDAO();
+            Account acc = d.checkLogin(email, password);
+
+            if (acc != null) {
+                HttpSession session = request.getSession();
+                session.setAttribute("LoginedUser", acc);
+                if (acc.getRole().equals("user")) {
+                    request.getRequestDispatcher("MainController?action=mainindex").forward(request, response);
+                } else if (acc.getRole().equals("admin")) {
+                    request.getRequestDispatcher("MainController?action=adminindex").forward(request, response);
+                }
+            } else {
+                String msg = "*Invalid account";
+                request.setAttribute("ERROR", msg);
+                request.getRequestDispatcher("MainController?action=welcome").forward(request, response);
+            }
         }
     }
 

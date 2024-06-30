@@ -38,7 +38,7 @@ public class MainController extends HttpServlet {
                 act = "welcome";
             }
             String url = "";
-            
+
             // switch action ra tung case
             switch (act) {
                 case "welcome":
@@ -49,6 +49,15 @@ public class MainController extends HttpServlet {
                     break;
                 case "saveuser":
                     url = "signupServlet";
+                    break;
+                case "mainindex":
+                    url = "index.jsp";
+                    break;
+                case "adminindex":
+                    url = "adminindex.jsp";
+                    break;
+                case "ERROR":
+                    url = "error.jsp";
                     break;
                 default:
                     break;

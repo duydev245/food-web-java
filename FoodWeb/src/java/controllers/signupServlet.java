@@ -5,6 +5,8 @@
  */
 package controllers;
 
+import dao.AccountDAO;
+import dto.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -32,7 +34,45 @@ public class signupServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            out.print("<h1>Sign up</h1>");
+            // Get user input from the form
+            String fullname = request.getParameter("txtname");
+            String password = request.getParameter("txtpassword");
+            String email = request.getParameter("txtemail");
+            String phone = request.getParameter("txtphone");
+            String address = request.getParameter("txtaddress");
+            String ward = request.getParameter("txtward");
+            String district = request.getParameter("txtdistrict");
+            String city = request.getParameter("txtcity");
+
+            // Validate input (simple validation example)
+            if (fullname == null || password == null || email == null || phone == null
+                    || address == null || ward == null || district == null || city == null
+                    || fullname.isEmpty() || password.isEmpty() || email.isEmpty() || phone.isEmpty()
+                    || address.isEmpty() || ward.isEmpty() || district.isEmpty() || city.isEmpty()) {
+                out.print("<div style='text-align: center'><h1>All fields are required.</h1>");
+                out.print("<p><a href='registerForm.jsp'>Back to Register Form</a></p></div>");
+                return;
+            }
+
+            // Check if email already exists
+            AccountDAO d = new AccountDAO();
+            boolean isExist = d.checkEmail(email);
+
+            if (isExist) {
+                out.print("<div style='text-align: center'><h1>Email already exists.</h1>");
+                out.print("<p><a href='registerForm.jsp'>Back to Register Form</a></p></div>");
+            } else {
+                try {
+                    int rs = d.insert(fullname, password, email, phone, address, Integer.parseInt(ward), Integer.parseInt(district), Integer.parseInt(city));
+                    if (rs >= 1) {
+                        request.getRequestDispatcher("MainController?action=welcome").forward(request, response);
+                    } else {
+                        request.getRequestDispatcher("MainController?action=ERROR").forward(request, response);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

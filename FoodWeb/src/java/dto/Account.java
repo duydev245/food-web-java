@@ -11,47 +11,39 @@ package dto;
  */
 public class Account {
 
-    private String id;
-    private String fullname;
+    private String fullName;
     private String password;
     private String email;
-    private int phone;
-    private int ward_id;
-    private int district_id;
-    private int city_id;
+    private String phone;
+    private String address;
+    private int wardId;
+    private int districtId;
+    private int cityId;
     private String role;
     private boolean status;
 
     public Account() {
     }
 
-    public Account(String id, String fullname, String password, String email, int phone, int ward_id, int district_id, int city_id, String role, boolean status) {
-        this.id = id;
-        this.fullname = fullname;
+    public Account(String fullName, String password, String email, String phone, String address, int wardId, int districtId, int cityId, String role, boolean status) {
+        this.fullName = fullName;
         this.password = password;
         this.email = email;
         this.phone = phone;
-        this.ward_id = ward_id;
-        this.district_id = district_id;
-        this.city_id = city_id;
+        this.address = address;
+        this.wardId = wardId;
+        this.districtId = districtId;
+        this.cityId = cityId;
         this.role = role;
         this.status = status;
     }
 
-    public String getId() {
-        return id;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getPassword() {
@@ -70,36 +62,44 @@ public class Account {
         this.email = email;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    public int getWard_id() {
-        return ward_id;
+    public String getAddress() {
+        return address;
     }
 
-    public void setWard_id(int ward_id) {
-        this.ward_id = ward_id;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public int getDistrict_id() {
-        return district_id;
+    public int getWardId() {
+        return wardId;
     }
 
-    public void setDistrict_id(int district_id) {
-        this.district_id = district_id;
+    public void setWardId(int wardId) {
+        this.wardId = wardId;
     }
 
-    public int getCity_id() {
-        return city_id;
+    public int getDistrictId() {
+        return districtId;
     }
 
-    public void setCity_id(int city_id) {
-        this.city_id = city_id;
+    public void setDistrictId(int districtId) {
+        this.districtId = districtId;
+    }
+
+    public int getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(int cityId) {
+        this.cityId = cityId;
     }
 
     public String getRole() {
@@ -118,4 +118,5 @@ public class Account {
         this.status = status;
     }
 
+    
 }
