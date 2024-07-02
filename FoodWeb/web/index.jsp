@@ -59,9 +59,22 @@
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
+                  Drinks
+                </a>
+              </li>
+              
+              <li class="nav-item text-center">
+                <a
+                  class="nav-link fs-4 fw-bold"
+                  href="#"
+                  role="button"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
                   Menus
                 </a>
               </li>
+              
               <li class="nav-item text-center">
                 <a
                   class="nav-link js-toggle-cart"

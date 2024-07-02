@@ -20,7 +20,7 @@
   </head>
   <body class="text-center">
     <main class="form-signin">
-      <form action="MainController">
+      <form action="MainController" method="post">
         <h1 class="mb-4 fw-bold">Sign In</h1>
 
         <h5 class="text-danger fw-bold mb-4">
@@ -50,7 +50,7 @@
         </div>
 
         <div class="mb-3">
-          <a href="registerForm.jsp">Register Account</a>
+          <a href="MainController?action=register">Register Account</a>
         </div>
         <button class="btn-submit" type="submit" value="signin" name="action">
           Sign In

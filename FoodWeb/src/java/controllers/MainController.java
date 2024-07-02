@@ -44,11 +44,8 @@ public class MainController extends HttpServlet {
                 case "welcome":
                     url = "signin.jsp";
                     break;
-                case "signin":
-                    url = "signinServlet";
-                    break;
-                case "saveuser":
-                    url = "signupServlet";
+                case "register":
+                    url = "registerForm.jsp";
                     break;
                 case "mainindex":
                     url = "index.jsp";
@@ -58,6 +55,12 @@ public class MainController extends HttpServlet {
                     break;
                 case "ERROR":
                     url = "error.jsp";
+                    break;
+                case "signin":
+                    url = "signinServlet";
+                    break;
+                case "saveuser":
+                    url = "signupServlet";
                     break;
                 default:
                     break;

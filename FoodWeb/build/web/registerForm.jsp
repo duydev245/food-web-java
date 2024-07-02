@@ -25,7 +25,7 @@
           <div class="col-12">
             <div class="card card-registration" style="border-radius: 15px">
               <div class="card-body p-0">
-                <form action="MainController">
+                <form action="MainController" method="post">
                   <div class="row g-0">
                     <div class="col-6 p-5">
                       <h3 class="mb-5" style="color: #02489d">
@@ -77,7 +77,7 @@
                       </div>
 
                       <div class="mb-4 mx-1">
-                        <a href="signin.jsp" style="text-decoration: none;">Sign In</a>
+                        <a href="MainController?action=welcome" style="text-decoration: none;">Sign In</a>
                       </div>
 
                       <p class="mb-4 mx-1 text-muted">&copy; May 2024</p>
