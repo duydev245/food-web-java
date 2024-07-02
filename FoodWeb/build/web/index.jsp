@@ -59,10 +59,10 @@
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
-                  Menus
+                  Drinks
                 </a>
               </li>
-
+              
               <li class="nav-item text-center">
                 <a
                   class="nav-link fs-4 fw-bold"
@@ -71,7 +71,7 @@
                   aria-haspopup="true"
                   aria-expanded="false"
                 >
-                  Drinks
+                  Menus
                 </a>
               </li>
               

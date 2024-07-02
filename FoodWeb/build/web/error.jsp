@@ -13,7 +13,7 @@
     </head>
     <body>
         <div style="text-align: center">
-            <h1>Something went wrong! Please try again....</h1>
+            <h1>Oppss!! Something went wrong! Please try again....</h1>
         </div>
     </body>
 </html>
