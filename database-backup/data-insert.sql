@@ -49,16 +49,3 @@ VALUES
 
 INSERT INTO Accounts (full_name, [password], email, phone, [address], ward_id, district_id, city_id, [role], [status]) 
 VALUES ('Admin', 'admin', 'sa@gmail.com', '123-456-7890', '123 Admin St', 1, 1, 1, 'admin', 1);
-
-
-INSERT INTO Dishes ([name], price, [status], [description], [category], [calories], [image], [recipe])
-VALUES 
-('Cold-Pressed Juice Variety Pack', 10.99, 1, 'Drink the rainbow with our variety pack of refreshing cold-pressed juices.', 'Juice', '110', 'https://images.everyplate.com/c_fillf_autofl_lossyh_398q_autow_1152/everyplate_s3/image/cold-pressed-juice-variety-pack-7a1e2a5d.jpg', 'Apple Juice, Kale Juice, Lemon Juice, Wheatgrass Juice'),
-('Summer Refresher Variety Pack', 9.99, 1, 'Quench your thirst in the most delicious way with these invigorating refreshers in two great flavors.', 'Juice', '90', 'https://images.everyplate.com/c_fillf_autofl_lossyh_398q_autow_1152/everyplate_s3/image/664bdf835e4dc3c6a6a93bf9-0d42242b.jpeg', 'Watermelon Juice, Pineapple Juice, Lime Juice, Basil Juice'),
-('Mint Lemonade Refresher', 8.99, 1, 'Quench your thirst in the most delicious way with these tangy lemon and invigorating mint refreshers.', 'Juice', '150', 'https://images.everyplate.com/c_fillf_autofl_lossyh_398q_autow_1152/everyplate_s3/image/664bdc835e4dc3c6a6a93bf3-b3b9ce31.jpeg', 'Apple Juice, Pineapple Juice, Lemon Juice, Mint Juice, Ascorbic Acid'),
-('Watermelon Lime Refresher', 8.99, 1, 'Quench your thirst in the most delicious way with these juicy watermelon and zesty lime refreshers.', 'Juice', '90', 'https://images.everyplate.com/c_fillf_autofl_lossyh_398q_autow_1152/everyplate_s3/image/664bdec96dac4f56a869fe91-928fc0d7.jpeg', 'Watermelon Juice, Pineapple Juice, Lime Juice, Basil Juice'),
-('Carrot Orange Ginger Juice', 7.99, 1, 'Stay hydrated while getting a dose of vitamins with a refreshing cold-pressed juice.', 'Juice', '90', 'https://images.everyplate.com/c_fillf_autofl_lossyh_398q_autow_1152/everyplate_s3/image/carrot-orange-ginger-juice-633895cc.jpg', 'Carrot Juice, Apple Juice, Orange Juice, Lemon Juice, Ginger Juice'),
-('Pineapple Turmeric Basil Juice', 7.99, 1, 'Wouldn’t it be nice to have a refreshing cold-pressed juice waiting for you in the fridge?', 'Juice', '110', 'https://images.everyplate.com/c_fillf_autofl_lossyh_398q_autow_1152/everyplate_s3/image/pineapple-turmeric-juice-w11-7585adae.jpg', 'Pineapple Juice, Celery Juice, Apple Juice, Basil Juice, Turmeric Juice'),
-('Apple Beet Ginger Juice', 7.99, 1, 'Give your day a quick boost with a refreshing cold-pressed juice.', 'Juice', '100', 'https://images.everyplate.com/c_fillf_autofl_lossyh_398q_autow_1152/everyplate_s3/image/apple-beet-ginger-juice-w11-d99f21c7.jpg', 'Apple Juice, Beet Juice, Ginger Juice'),
-('Apple Kale Wheatgrass Juice', 7.99, 1, 'It’s easy being green with this refreshing cold-pressed juice.', 'Juice', '110', 'https://images.everyplate.com/c_fillf_autofl_lossyh_398q_autow_1152/everyplate_s3/image/apple-kale-wheatgrass-juice-w11-e4c44848.jpg', 'Apple Juice, Kale Juice, Lemon Juice, Wheatgrass Juice');
-

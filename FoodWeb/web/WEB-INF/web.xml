@@ -12,6 +12,18 @@
         <servlet-name>signupServlet</servlet-name>
         <servlet-class>controllers.signupServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>getMenusServlet</servlet-name>
+        <servlet-class>controllers.getMenusServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>getItemsServlet</servlet-name>
+        <servlet-class>controllers.getItemsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>searchItemsServlet</servlet-name>
+        <servlet-class>controllers.searchItemsServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainController</servlet-name>
         <url-pattern>/MainController</url-pattern>
@@ -23,6 +35,18 @@
     <servlet-mapping>
         <servlet-name>signupServlet</servlet-name>
         <url-pattern>/signupServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>getMenusServlet</servlet-name>
+        <url-pattern>/getMenusServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>getItemsServlet</servlet-name>
+        <url-pattern>/getItemsServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>searchItemsServlet</servlet-name>
+        <url-pattern>/searchItemsServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
