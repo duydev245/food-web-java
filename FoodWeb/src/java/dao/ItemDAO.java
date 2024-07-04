@@ -30,6 +30,7 @@ public class ItemDAO {
                 ResultSet table = pst.executeQuery();
                 if (table != null) {
                     while (table.next()) {
+                        int itemid = table.getInt("id");
                         String itemname = table.getString("name");
                         int price = table.getInt("price");
                         boolean status = table.getBoolean("status");
@@ -37,7 +38,7 @@ public class ItemDAO {
                         String category = table.getString("category");
                         String image = table.getString("image");
                         String recipe = table.getString("recipe");
-                        Item it = new Item(itemname, price, status, desc, category, category, image, recipe);
+                        Item it = new Item(itemid, itemname, price, status, desc, category, category, image, recipe);
                         list.add(it);
                     }
                 }
@@ -70,6 +71,7 @@ public class ItemDAO {
                 ResultSet table = pst.executeQuery();
                 if (table != null) {
                     while (table.next()) {
+                        int itemid = table.getInt("id");
                         String itemname = table.getString("name");
                         int price = table.getInt("price");
                         boolean status = table.getBoolean("status");
@@ -77,7 +79,7 @@ public class ItemDAO {
                         String category = table.getString("category");
                         String image = table.getString("image");
                         String recipe = table.getString("recipe");
-                        Item it = new Item(itemname, price, status, desc, category, category, image, recipe);
+                        Item it = new Item(itemid, itemname, price, status, desc, category, category, image, recipe);
                         list.add(it);
                     }
                 }
@@ -94,6 +96,46 @@ public class ItemDAO {
             }
         }
         return list;
+    }
+
+    public Item getItemById(int itemid) {
+        Item rs = null;
+        Connection cn = null;
+        try {
+            cn = DBUtil.makeConnection();
+            if (cn != null) {
+                String sql = "SELECT [id], [name], [price], [status], [description], [category], [calories], [image], [recipe]\n"
+                        + "FROM [DBFOODWEB].[dbo].[Dishes]\n"
+                        + "WHERE [id] = ?";
+                PreparedStatement pst = cn.prepareStatement(sql);
+                pst.setInt(1, itemid);
+                ResultSet table = pst.executeQuery();
+
+                if (table != null) {
+                    while (table.next()) {
+                        String itemname = table.getString("name");
+                        int price = table.getInt("price");
+                        boolean status = table.getBoolean("status");
+                        String desc = table.getString("description");
+                        String category = table.getString("category");
+                        String image = table.getString("image");
+                        String recipe = table.getString("recipe");
+                        rs = new Item(itemid, itemname, price, status, desc, category, category, image, recipe);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (cn != null) {
+                    cn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return rs;
     }
 
 }

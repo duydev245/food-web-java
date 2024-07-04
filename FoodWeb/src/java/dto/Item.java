@@ -11,6 +11,7 @@ package dto;
  */
 public class Item {
 
+    private int id;
     private String name;
     private int price;
     private boolean status;
@@ -23,7 +24,8 @@ public class Item {
     public Item() {
     }
 
-    public Item(String name, int price, boolean status, String desc, String category, String calories, String image, String recipe) {
+    public Item(int id, String name, int price, boolean status, String desc, String category, String calories, String image, String recipe) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.status = status;
@@ -32,6 +34,14 @@ public class Item {
         this.calories = calories;
         this.image = image;
         this.recipe = recipe;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -97,7 +107,5 @@ public class Item {
     public void setRecipe(String recipe) {
         this.recipe = recipe;
     }
-
-    
 
 }

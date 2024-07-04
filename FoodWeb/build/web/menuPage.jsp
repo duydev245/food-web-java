@@ -241,36 +241,7 @@
                 </tr>
               </thead>
               <tbody id="cartList">
-                <tr>
-                  <th scope="row">Thịt Kho Tộ</th>
-                  <td>
-                    <button class="btn btn-danger rounded-circle">-</button>
-                    <span class="fw-bold">1</span>
-                    <button class="btn btn-primary rounded-circle">+</button>
-                  </td>
-                  <td>150000 VND</td>
-                  <td><button class="btn btn-danger">X</button></td>
-                </tr>
-                <tr>
-                  <th scope="row">Thịt Kho Tộ</th>
-                  <td>
-                    <button class="btn btn-danger rounded-circle">-</button>
-                    <span class="fw-bold">1</span>
-                    <button class="btn btn-primary rounded-circle">+</button>
-                  </td>
-                  <td>150000 VND</td>
-                  <td><button class="btn btn-danger">X</button></td>
-                </tr>
-                <tr>
-                  <th scope="row">Thịt Kho Tộ</th>
-                  <td>
-                    <button class="btn btn-danger rounded-circle">-</button>
-                    <span class="fw-bold">1</span>
-                    <button class="btn btn-primary rounded-circle">+</button>
-                  </td>
-                  <td>150000 VND</td>
-                  <td><button class="btn btn-danger">X</button></td>
-                </tr>
+                
               </tbody>
             </table>
           </div>

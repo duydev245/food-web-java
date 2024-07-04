@@ -1,5 +1,6 @@
 <%-- Document : dishPage Created on : Jul 3, 2024, 9:27:40 AM Author : htduy
---%> <%@page import="dto.Item"%>
+--%> <%@page import="dto.CartItem"%>
+<%@page import="dto.Item"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -187,7 +188,7 @@
                                     </a>
                                 </div>
                                 <div class="col-10">
-                                    <a href="#">
+                                    <a href="AddToCartServlet?itemid=<%= it.getId()%>">
                                         <button class="btn btn-warning w-100 h-100 fw-bold">
                                             <i class="fa fa-shopping-cart"></i>
                                             Add to Cart
@@ -205,6 +206,9 @@
             </div>
         </div>
 
+        <%
+            ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("cart");
+        %>
         <!-- Cart -->
         <div class="cart is-hidden">
             <div class="cart__overlay"></div>
@@ -222,48 +226,36 @@
                                 </tr>
                             </thead>
                             <tbody id="cartList">
+                                <%  int total = 0;
+                                    if (cart != null) {
+                                        for (CartItem item : cart) {
+                                            total += item.getQuantity() * item.getItem().getPrice();
+                                %>
                                 <tr>
-                                    <th scope="row">Thịt Kho Tộ</th>
+                                    <th scope="row"><%= item.getItem().getName()%></th>
                                     <td>
-                                        <button class="btn btn-danger rounded-circle">-</button>
-                                        <span class="fw-bold">1</span>
-                                        <button class="btn btn-primary rounded-circle">+</button>
+                                        <!--<button class="btn btn-danger rounded-circle">-</button>-->
+                                        <span class="fw-bold"><%= item.getQuantity()%></span>
+                                        <!--<button class="btn btn-primary rounded-circle">+</button>-->
                                     </td>
-                                    <td>150000 VND</td>
-                                    <td><button class="btn btn-danger">X</button></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Thịt Kho Tộ</th>
+                                    <td><%= item.getItem().getPrice()%>$</td>
                                     <td>
-                                        <button class="btn btn-danger rounded-circle">-</button>
-                                        <span class="fw-bold">1</span>
-                                        <button class="btn btn-primary rounded-circle">+</button>
+                                        <button class="btn btn-danger">X</button>
                                     </td>
-                                    <td>150000 VND</td>
-                                    <td><button class="btn btn-danger">X</button></td>
                                 </tr>
-                                <tr>
-                                    <th scope="row">Thịt Kho Tộ</th>
-                                    <td>
-                                        <button class="btn btn-danger rounded-circle">-</button>
-                                        <span class="fw-bold">1</span>
-                                        <button class="btn btn-primary rounded-circle">+</button>
-                                    </td>
-                                    <td>150000 VND</td>
-                                    <td><button class="btn btn-danger">X</button></td>
-                                </tr>
+                                <% }
+                                    }%>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
                 <div class="cart__totals">
-                    <h3 class="text-start">Total: 500000 VND</h3>
+                    <h3 class="text-start">Total: <%= total%>$</h3>
 
                     <div class="form__footer mt-3">
                         <button
                             class="btn btn-success py-3 px-4 fs-5 fw-bold"
-                            onclick="payNow()"
                             >
                             Pay Now
                         </button>
@@ -364,7 +356,7 @@
 
         <script>
             // count cart
-            document.getElementById("cartCount").innerHTML = "4";
+            document.getElementById("cartCount").innerHTML = <%= cart.size()%>;
 
             // toggle shopping cart
             $(".js-toggle-cart, .cart__overlay").on("click", function () {
