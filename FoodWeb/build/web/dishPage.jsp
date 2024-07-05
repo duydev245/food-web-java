@@ -208,6 +208,8 @@
 
         <%
             ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("cart");
+            int total = 0;
+            int cartSize = (cart != null) ? cart.size() : 0;
         %>
         <!-- Cart -->
         <div class="cart is-hidden">
@@ -226,7 +228,7 @@
                                 </tr>
                             </thead>
                             <tbody id="cartList">
-                                <%  int total = 0;
+                                <%
                                     if (cart != null) {
                                         for (CartItem item : cart) {
                                             total += item.getQuantity() * item.getItem().getPrice();
@@ -244,7 +246,11 @@
                                     </td>
                                 </tr>
                                 <% }
-                                    }%>
+                                } else { %> 
+                                <tr>
+                                    <td class="text-center fw-bold fs-3" colspan="4">Empty Cart</td>
+                                </tr>
+                                <% }%>
                             </tbody>
                         </table>
                     </div>
@@ -356,7 +362,7 @@
 
         <script>
             // count cart
-            document.getElementById("cartCount").innerHTML = <%= cart.size()%>;
+            document.getElementById("cartCount").innerHTML = <%= cartSize%>;
 
             // toggle shopping cart
             $(".js-toggle-cart, .cart__overlay").on("click", function () {
