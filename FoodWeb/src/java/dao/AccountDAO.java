@@ -151,4 +151,46 @@ public class AccountDAO {
         }
         return rs;
     }
+
+    public ArrayList<Account> getAllAccounts() {
+        ArrayList<Account> accountList = new ArrayList<>();
+        Connection conn = null;
+        try {
+            conn = DBUtil.makeConnection();
+            if (conn != null) {
+                String sql = "SELECT id, full_name, email, phone, address, ward_id, district_id, city_id, role, status "
+                        + "FROM Accounts";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    String id = rs.getString("id");
+                    String fullName = rs.getString("full_name");
+                    String email = rs.getString("email");
+                    String phone = rs.getString("phone");
+                    String address = rs.getString("address");
+                    int wardId = rs.getInt("ward_id");
+                    int districtId = rs.getInt("district_id");
+                    int cityId = rs.getInt("city_id");
+                    String role = rs.getString("role");
+                    boolean status = rs.getBoolean("status");
+
+                    // Tạo đối tượng Account từ các thông tin lấy được từ cơ sở dữ liệu
+                    Account account = new Account(id, fullName, email, phone, address, wardId, districtId, cityId, role, status);
+                    accountList.add(account);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return accountList;
+    }
+
 }

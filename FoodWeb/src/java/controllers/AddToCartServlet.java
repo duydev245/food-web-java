@@ -64,7 +64,7 @@ public class AddToCartServlet extends HttpServlet {
 
             // Save cart into session memory
             session.setAttribute("cart", cart);
-            request.getRequestDispatcher("getItemsServlet").forward(request, response);
+            request.getRequestDispatcher("MainController?action=opendish").forward(request, response);
         }
     }
 

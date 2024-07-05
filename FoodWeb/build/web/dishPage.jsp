@@ -99,7 +99,7 @@
             </div>
 
             <div class="filterPart my-4">
-                <form action="MainController" class="d-flex">
+                <form action="MainController" method="post" class="d-flex">
                     <input
                         class="form-control me-2"
                         type="search"
@@ -119,7 +119,7 @@
                     </button>
                 </form>
 
-                <form action="MainController" class="mt-4">
+                <form action="MainController" method="post" class="mt-4">
                     <div class="row">
                         <div class="col-3">
                             <select name="txtType" class="form-select fw-bold">
@@ -188,12 +188,14 @@
                                     </a>
                                 </div>
                                 <div class="col-10">
-                                    <a href="AddToCartServlet?itemid=<%= it.getId()%>">
+                                    <form action="MainController" method="post" style="display:inline;">
+                                        <input type="hidden" name="itemid" value="<%= it.getId()%>">
+                                        <input type="hidden" name="action" value="addtocart">
                                         <button class="btn btn-warning w-100 h-100 fw-bold">
                                             <i class="fa fa-shopping-cart"></i>
                                             Add to Cart
                                         </button>
-                                    </a>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -236,19 +238,36 @@
                                 <tr>
                                     <th scope="row"><%= item.getItem().getName()%></th>
                                     <td>
-                                        <!--<button class="btn btn-danger rounded-circle">-</button>-->
-                                        <span class="fw-bold"><%= item.getQuantity()%></span>
-                                        <!--<button class="btn btn-primary rounded-circle">+</button>-->
+                                        <div style="display: flex; align-items: center; gap: 7px">
+                                            <form action="ModifyCartServlet" method="post" style="display:inline;">
+                                                <input type="hidden" name="itemid" value="<%= item.getItem().getId()%>">
+                                                <input type="hidden" name="action" value="decrease">
+                                                <input type="hidden" name="nextAction" value="opendish">
+                                                <button type="submit" class="btn btn-danger rounded-circle">-</button>
+                                            </form>
+                                            <span class="fw-bold"><%= item.getQuantity()%></span>
+                                            <form action="ModifyCartServlet" method="post" style="display:inline;">
+                                                <input type="hidden" name="itemid" value="<%= item.getItem().getId()%>">
+                                                <input type="hidden" name="action" value="increase">
+                                                <input type="hidden" name="nextAction" value="opendish">
+                                                <button type="submit" class="btn btn-primary rounded-circle">+</button>
+                                            </form>
+                                        </div>
                                     </td>
                                     <td><%= item.getItem().getPrice()%>$</td>
                                     <td>
-                                        <button class="btn btn-danger">X</button>
+                                        <form action="ModifyCartServlet" method="post">
+                                            <input type="hidden" name="itemid" value="<%= item.getItem().getId()%>">
+                                            <input type="hidden" name="action" value="remove">
+                                            <input type="hidden" name="nextAction" value="opendish">
+                                            <button type="submit" class="btn btn-danger">X</button>
+                                        </form>
                                     </td>
                                 </tr>
                                 <% }
                                 } else { %> 
                                 <tr>
-                                    <td class="text-center fw-bold fs-3" colspan="4">Empty Cart</td>
+                                    <td class="text-center fw-bold fs-3" colspan="4">Cart is empty</td>
                                 </tr>
                                 <% }%>
                             </tbody>

@@ -5,18 +5,21 @@
  */
 package controllers;
 
+import dto.CartItem;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author htduy
  */
-public class MainController extends HttpServlet {
+public class ModifyCartServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,54 +35,52 @@ public class MainController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            // Nhan action
-            String act = request.getParameter("action");
-            String id = "";
+            HttpSession session = request.getSession();
+            ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("cart");
 
-            if (act == null) {
-                act = "welcome";
+            if (cart == null) {
+                cart = new ArrayList<>();
             }
-            String url = "";
 
-            // switch action ra tung case
-            switch (act) {
-                case "welcome":
-                    url = "signin.jsp";
-                    break;
-                case "register":
-                    url = "registerForm.jsp";
-                    break;
-                case "mainindex":
-                    url = "index.jsp";
-                    break;
-                case "adminindex":
-                    url = "adminindex.jsp";
-                    break;
-                case "ERROR":
-                    url = "error.jsp";
-                    break;
-                case "signin":
-                    url = "signinServlet";
-                    break;
-                case "saveuser":
-                    url = "signupServlet";
-                    break;
-                case "opendish":
-                    url = "getItemsServlet";
-                    break;
-                case "openmenu":
-                    url = "getMenusServlet";
-                    break;
-                case "searchDishes":
-                    url = "searchItemsServlet";
-                    break;
-                case "addtocart":
-                    url = "AddToCartServlet";
-                    break;
-                default:
-                    break;
+            String itemid = request.getParameter("itemid");
+            String action = request.getParameter("action");
+
+            if (itemid != null && action != null) {
+                int itemId = Integer.parseInt(itemid);
+                switch (action) {
+                    case "increase":
+                        for (CartItem item : cart) {
+                            if (item.getItem().getId() == itemId) {
+                                item.setQuantity(item.getQuantity() + 1);
+                                break;
+                            }
+                        }
+                        break;
+                    case "decrease":
+                        for (CartItem item : cart) {
+                            if (item.getItem().getId() == itemId) {
+                                if (item.getQuantity() > 1) {
+                                    item.setQuantity(item.getQuantity() - 1);
+                                } else {
+                                    cart.remove(item);
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    case "remove":
+                        cart.removeIf(item -> item.getItem().getId() == itemId);
+                        break;
+                }
             }
-            request.getRequestDispatcher(url).forward(request, response);
+
+            // Save cart into session memory
+            session.setAttribute("cart", cart);
+            // Determine the next page to forward or redirect
+            String nextAction = request.getParameter("nextAction");
+            if (nextAction != null) {
+                request.getRequestDispatcher("MainController?action=" + nextAction).forward(request, response);
+            }
         }
     }
 

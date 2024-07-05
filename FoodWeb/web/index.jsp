@@ -1,4 +1,6 @@
 <%-- Document : index Created on : Jun 25, 2024, 4:26:52 PM Author : htduy --%>
+<%@page import="dto.CartItem"%>
+<%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
@@ -484,6 +486,11 @@
             </div>
         </div>
 
+        <%
+            ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("cart");
+            int total = 0;
+            int cartSize = (cart != null) ? cart.size() : 0;
+        %>
         <!-- Cart -->
         <div class="cart is-hidden">
             <div class="cart__overlay"></div>
@@ -501,48 +508,57 @@
                                 </tr>
                             </thead>
                             <tbody id="cartList">
+                                <%
+                                    if (cart != null) {
+                                        for (CartItem item : cart) {
+                                            total += item.getQuantity() * item.getItem().getPrice();
+                                %>
                                 <tr>
-                                    <th scope="row">Thịt Kho Tộ</th>
+                                    <th scope="row"><%= item.getItem().getName()%></th>
                                     <td>
-                                        <button class="btn btn-danger rounded-circle">-</button>
-                                        <span class="fw-bold">1</span>
-                                        <button class="btn btn-primary rounded-circle">+</button>
+                                        <div style="display: flex; align-items: center; gap: 7px">
+                                            <form action="ModifyCartServlet" method="post" style="display:inline;">
+                                                <input type="hidden" name="itemid" value="<%= item.getItem().getId()%>">
+                                                <input type="hidden" name="action" value="decrease">
+                                                <input type="hidden" name="nextAction" value="mainindex">
+                                                <button type="submit" class="btn btn-danger rounded-circle">-</button>
+                                            </form>
+                                            <span class="fw-bold"><%= item.getQuantity()%></span>
+                                            <form action="ModifyCartServlet" method="post" style="display:inline;">
+                                                <input type="hidden" name="itemid" value="<%= item.getItem().getId()%>">
+                                                <input type="hidden" name="action" value="increase">
+                                                <input type="hidden" name="nextAction" value="mainindex">
+                                                <button type="submit" class="btn btn-primary rounded-circle">+</button>
+                                            </form>
+                                        </div>
                                     </td>
-                                    <td>150000 VND</td>
-                                    <td><button class="btn btn-danger">X</button></td>
+                                    <td><%= item.getItem().getPrice()%>$</td>
+                                    <td>
+                                        <form action="ModifyCartServlet" method="post">
+                                            <input type="hidden" name="itemid" value="<%= item.getItem().getId()%>">
+                                            <input type="hidden" name="action" value="remove">
+                                            <input type="hidden" name="nextAction" value="mainindex">
+                                            <button type="submit" class="btn btn-danger">X</button>
+                                        </form>
+                                    </td>
                                 </tr>
+                                <% }
+                                } else { %> 
                                 <tr>
-                                    <th scope="row">Thịt Kho Tộ</th>
-                                    <td>
-                                        <button class="btn btn-danger rounded-circle">-</button>
-                                        <span class="fw-bold">1</span>
-                                        <button class="btn btn-primary rounded-circle">+</button>
-                                    </td>
-                                    <td>150000 VND</td>
-                                    <td><button class="btn btn-danger">X</button></td>
+                                    <td class="text-center fw-bold fs-3" colspan="4">Cart is empty</td>
                                 </tr>
-                                <tr>
-                                    <th scope="row">Thịt Kho Tộ</th>
-                                    <td>
-                                        <button class="btn btn-danger rounded-circle">-</button>
-                                        <span class="fw-bold">1</span>
-                                        <button class="btn btn-primary rounded-circle">+</button>
-                                    </td>
-                                    <td>150000 VND</td>
-                                    <td><button class="btn btn-danger">X</button></td>
-                                </tr>
+                                <% }%>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
                 <div class="cart__totals">
-                    <h3 class="text-start">Total: 500000 VND</h3>
+                    <h3 class="text-start">Total: <%= total%>$</h3>
 
                     <div class="form__footer mt-3">
                         <button
                             class="btn btn-success py-3 px-4 fs-5 fw-bold"
-                            onclick="payNow()"
                             >
                             Pay Now
                         </button>
@@ -660,7 +676,7 @@
             });
 
             // count cart
-            document.getElementById("cartCount").innerHTML = "4";
+            document.getElementById("cartCount").innerHTML = <%= cartSize%>;
 
             // toggle shopping cart
             $(".js-toggle-cart, .cart__overlay").on("click", function () {
