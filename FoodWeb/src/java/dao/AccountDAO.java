@@ -8,10 +8,6 @@ package dao;
 import dto.Account;
 import java.sql.*;
 import java.util.ArrayList;
-
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import mylib.DBUtil;
 
 /**

@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author htduy
  */
-public class getMenusServlet extends HttpServlet {
+public class searchMenuServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,11 +35,17 @@ public class getMenusServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            MenuDAO d = new MenuDAO();
-            ArrayList<Menu> menuList = d.getAllMenus();
+            String findName = "";
+            findName = request.getParameter("txtsearch");
+
+            if (findName == null || findName.isEmpty()) {
+                findName = "";
+            }
             
-            request.setAttribute("menuList", menuList);
-            request.getRequestDispatcher("menuPage.jsp").forward(request, response);
+            MenuDAO d = new MenuDAO();
+            ArrayList<Menu> list = d.getMenuByName(findName);
+            request.setAttribute("menuList", list);
+            request.getRequestDispatcher("menuPage.jsp?searchItem=" + findName).forward(request, response);
         }
     }
 

@@ -1,5 +1,8 @@
 <%-- Document : menuPage Created on : Jul 3, 2024, 9:29:18 AM Author : htduy
---%> <%@page import="dto.CartItem"%>
+--%> 
+<%@page import="java.util.List"%>
+<%@page import="dto.Menu"%>
+<%@page import="dto.CartItem"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -98,19 +101,20 @@
             </div>
 
             <div class="filterPart my-4">
-                <form action="MainController" method="get" class="d-flex">
+                <form action="MainController" method="post" class="d-flex">
                     <input
                         class="form-control me-2"
                         type="search"
                         name="txtsearch"
                         placeholder="Search"
                         aria-label="Search"
+                        value='${param.searchItem}'
                         />
                     <button
                         id="btnSearch"
                         class="rounded px-3 py-2"
                         type="submit"
-                        value="search"
+                        value="searchMenu"
                         name="action"
                         >
                         <i class="fa fa-search"></i>
@@ -121,9 +125,9 @@
                     <div class="row">
                         <div class="col-3">
                             <select name="txtType" class="form-select fw-bold">
-                                <option value="">Type</option>
-                                <option value="1">Protein Plus</option>
-                                <option value="2">Vegan + Vegie</option>
+                                <option value="">Category</option>
+                                <option value="Protein+">Protein Plus</option>
+                                <option value="Vegan & Veggie">Vegan & Veggie</option>
                             </select>
                         </div>
                         <div class="col-3">
@@ -137,9 +141,9 @@
                         <div class="col-3">
                             <select name="txtPrice" class="form-select fw-bold">
                                 <option value="">Price</option>
-                                <option value="1">100$ - 200$</option>
-                                <option value="2">200$ - 400$</option>
-                                <option value="3">Upper 400$</option>
+                                <option value="1">Lower 45$</option>
+                                <option value="2">45$ - 50$</option>
+                                <option value="3">Upper 50$</option>
                             </select>
                         </div>
                         <div class="col-3">
@@ -158,75 +162,64 @@
             </div>
 
             <div class="menuList row">
+                <%
+                    ArrayList<Menu> list = (ArrayList<Menu>) request.getAttribute("menuList");
+                    if (list != null) {
+                        for (Menu menu : list) {
+                            List<String> images = menu.getImages();
+                            String image1 = images.size() > 0 ? images.get(0) : "";
+                            String image2 = images.size() > 1 ? images.get(1) : "";
+                            String image3 = images.size() > 2 ? images.get(2) : "";
+                            String image4 = images.size() > 3 ? images.get(3) : "";
+                %>
                 <div class="col-4 mb-5">
                     <div class="card">
                         <div class="row px-3">
                             <div class="col-6 p-2">
-                                <img
-                                    src="https://img.hellofresh.com/q_60,w_640,f_auto,c_limit,fl_lossy/hellofresh_s3/image/663e57a9fe8a253ad9a7d6e2-3ee40305.jpeg"
-                                    class="card-img-top rounded w-auto h-100"
-                                    alt="..."
-                                    />
+                                <img src="<%= image1%>" class="card-img-top rounded w-auto h-100" alt="..."/>
                             </div>
                             <div class="col-6 p-2">
-                                <img
-                                    src="https://img.hellofresh.com/q_60,w_640,f_auto,c_limit,fl_lossy/hellofresh_s3/image/645e87b278ea89b5870601a4-c7176d1e.jpg"
-                                    class="card-img-top rounded w-auto h-100"
-                                    alt="..."
-                                    />
+                                <img src="<%= image2%>" class="card-img-top rounded w-auto h-100" alt="..."/>
                             </div>
                         </div>
                         <div class="row px-3">
                             <div class="col-6 p-2">
-                                <img
-                                    src="https://img.hellofresh.com/q_60,w_640,f_auto,c_limit,fl_lossy/hellofresh_s3/image/643d78435d43c53662003f65-44c90c92.jpg"
-                                    class="card-img-top rounded w-auto h-100"
-                                    alt="..."
-                                    />
+                                <img src="<%= image3%>" class="card-img-top rounded w-auto h-100" alt="..."/>
                             </div>
                             <div class="col-6 p-2">
-                                <img
-                                    src="https://images.everyplate.com/f_auto,fl_lossy,q_auto,w_525/everyplate_s3/image/pineapple-turmeric-juice-w11-7585adae.jpg"
-                                    class="card-img-top rounded w-auto h-100"
-                                    alt="..."
-                                    />
+                                <img src="<%= image4%>" class="card-img-top rounded w-auto h-100" alt="..."/>
                             </div>
                         </div>
-
-                        <div
-                            class="card-body"
-                            style="border-top: 2px solid rgb(208, 204, 204)"
-                            >
+                        <div class="card-body" style="border-top: 2px solid rgb(208, 204, 204)">
                             <a href="">
-                                <h5 class="card-title">
-                                    Enjoy dietitian-designed meals packed with premium,
-                                    nutritional quality.
-                                </h5>
+                                <h5 class="card-title"><%= menu.getName()%></h5>
                             </a>
-                            <p class="card-text text-danger fw-bold">Price: 260$</p>
+                            <p class="card-text text-danger fw-bold">Price: <%= menu.getTotalPrice()%>$</p>
                             <div class="row">
-                                <!-- <div class="col-2">
-                                  <a href="#">
-                                    <button class="btn btn-danger w-100 h-100">
-                                      <i class="fa fa-heart"></i>
-                                    </button>
-                                  </a>
-                                </div> -->
                                 <div class="col-12">
-                                    <a href="#">
+                                    <form action="MainController" method="post" style="display:inline;">
+                                        <input type="hidden" name="itemid" value="<%= menu.getId()%>">
+                                        <input type="hidden" name="action" value="addtocart">
+                                        <input type="hidden" name="actionFrom" value="menu">
+                                        <input type="hidden" name="nextAction" value="openmenu">
                                         <button class="btn btn-warning w-100 h-100 fw-bold">
                                             <i class="fa fa-shopping-cart"></i>
                                             Add to Cart
                                         </button>
-                                    </a>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <%
+                        }
+                    }
+                %>
+
             </div>
         </div>
-        
+
         <%
             ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("cart");
             int total = 0;

@@ -121,35 +121,26 @@
 
                 <form action="MainController" method="post" class="mt-4">
                     <div class="row">
-                        <div class="col-3">
+                        <div class="col-5">
                             <select name="txtType" class="form-select fw-bold">
                                 <option value="">Category</option>
                                 <option value="Protein+">Protein Plus</option>
-                                <option value="Vegan & Veggie ">Vegan + Vegie</option>
+                                <option value="Vegan & Veggie">Vegan & Veggie</option>
                                 <option value="Juice">Drinks</option>
                             </select>
                         </div>
-                        <div class="col-3">
+                        <div class="col-5">
                             <select name="txtPrice" class="form-select fw-bold">
                                 <option value="">Price</option>
-                                <option value="1">100$ - 200$</option>
-                                <option value="2">200$ - 400$</option>
-                                <option value="3">Upper 400$</option>
+                                <option value="1">Lower 10$</option>
+                                <option value="2">10$ - 15$</option>
+                                <option value="3">Upper 15$</option>
                             </select>
                         </div>
-                        <div class="col-3">
-                            <select name="txtSort" class="form-select fw-bold">
-                                <option value="">Sort</option>
-                                <option value="1">A - Z</option>
-                                <option value="2">Z - A</option>
-                                <option value="3">Highest - Lowest</option>
-                                <option value="4">Lowest - Highest</option>
-                            </select>
-                        </div>
-                        <div class="col-3">
+                        <div class="col-2">
                             <button
                                 type="submit"
-                                value="filter"
+                                value="filterDishes"
                                 name="action"
                                 id="btnSearch"
                                 class="rounded fw-bold px-3 py-2 w-100"
@@ -170,7 +161,7 @@
                 <div class="col-4 mb-5">
                     <div class="card">
                         <img
-                            src=<%= it.getImage()%>
+                            src=<%= it.getImage1()%>
                             class="card-img-top w-auto h-auto"
                             alt="..."
                             />
@@ -191,6 +182,8 @@
                                     <form action="MainController" method="post" style="display:inline;">
                                         <input type="hidden" name="itemid" value="<%= it.getId()%>">
                                         <input type="hidden" name="action" value="addtocart">
+                                        <input type="hidden" name="actionFrom" value="dish">
+                                        <input type="hidden" name="nextAction" value="opendish">
                                         <button class="btn btn-warning w-100 h-100 fw-bold">
                                             <i class="fa fa-shopping-cart"></i>
                                             Add to Cart

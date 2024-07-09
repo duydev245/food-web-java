@@ -34,8 +34,7 @@ public class MainController extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
             // Nhan action
             String act = request.getParameter("action");
-            String id = "";
-
+            
             if (act == null) {
                 act = "welcome";
             }
@@ -72,6 +71,12 @@ public class MainController extends HttpServlet {
                     break;
                 case "searchDishes":
                     url = "searchItemsServlet";
+                    break;
+                case "filterDishes":
+                    url = "filterItemsServlet";
+                    break;
+                case "searchMenu":
+                    url = "searchMenuServlet";
                     break;
                 case "addtocart":
                     url = "AddToCartServlet";

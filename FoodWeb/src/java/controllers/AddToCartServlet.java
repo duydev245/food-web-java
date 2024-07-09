@@ -6,8 +6,10 @@
 package controllers;
 
 import dao.ItemDAO;
+import dao.MenuDAO;
 import dto.CartItem;
 import dto.Item;
+import dto.Menu;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -38,12 +40,28 @@ public class AddToCartServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             String itemid = request.getParameter("itemid");
+            String actionFrom = request.getParameter("actionFrom");
 
             HttpSession session = request.getSession();
             ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("cart");
 
             ItemDAO d = new ItemDAO();
-            Item it = d.getItemById(Integer.parseInt(itemid));
+            MenuDAO md = new MenuDAO();
+
+            Item it = null;
+            Menu menu = null;
+
+            // Determine item type and fetch from DAO accordingly
+            if ("dish".equals(actionFrom)) {
+                it = d.getItemById(Integer.parseInt(itemid));
+            } else if ("menu".equals(actionFrom)) {
+                menu = md.getMenuById(Integer.parseInt(itemid));
+                if (menu != null) {
+                    it = new Item(menu.getId(), menu.getName(), menu.getTotalPrice(), menu.isStatus(), menu.getDescription(), menu.getCategory(), menu.getTotalCalories(), menu.getImages().get(0), menu.getImages().get(1), menu.getImages().get(2), menu.getImages().get(3));
+                }
+            } else {
+                return; // Handle this case appropriately
+            }
 
             if (cart == null) {
                 cart = new ArrayList<>();
@@ -64,7 +82,12 @@ public class AddToCartServlet extends HttpServlet {
 
             // Save cart into session memory
             session.setAttribute("cart", cart);
-            request.getRequestDispatcher("MainController?action=opendish").forward(request, response);
+
+            // Determine the next page to forward or redirect
+            String nextAction = request.getParameter("nextAction");
+            if (nextAction != null) {
+                request.getRequestDispatcher("MainController?action=" + nextAction).forward(request, response);
+            }
         }
     }
 

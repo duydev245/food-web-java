@@ -5,8 +5,8 @@
  */
 package controllers;
 
-import dao.MenuDAO;
-import dto.Menu;
+import dao.ItemDAO;
+import dto.Item;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author htduy
  */
-public class getMenusServlet extends HttpServlet {
+public class filterItemsServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,11 +35,14 @@ public class getMenusServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            MenuDAO d = new MenuDAO();
-            ArrayList<Menu> menuList = d.getAllMenus();
+            String type = request.getParameter("txtType");
+            String price = request.getParameter("txtPrice");
             
-            request.setAttribute("menuList", menuList);
-            request.getRequestDispatcher("menuPage.jsp").forward(request, response);
+            ItemDAO d = new ItemDAO();
+            ArrayList<Item> list = d.getItemsFilter(type, price);
+            
+            request.setAttribute("ListItems", list);
+            request.getRequestDispatcher("dishPage.jsp").forward(request, response);
         }
     }
 
