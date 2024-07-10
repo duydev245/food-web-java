@@ -139,17 +139,17 @@
                             </select>
                         </div>
                         <div class="col-3">
-                            <select name="txtPrice" class="form-select fw-bold">
-                                <option value="">Price</option>
-                                <option value="1">Lower 45$</option>
-                                <option value="2">45$ - 50$</option>
-                                <option value="3">Upper 50$</option>
+                            <select name="txtPeriod" class="form-select fw-bold">
+                                <option value="">Period</option>
+                                <option value="1">Brunch</option>
+                                <option value="2">Lunch</option>
+                                <option value="3">Dinner</option>
                             </select>
                         </div>
                         <div class="col-3">
                             <button
                                 type="submit"
-                                value="filter"
+                                value="filterMenus"
                                 name="action"
                                 id="btnSearch"
                                 class="rounded fw-bold px-3 py-2 w-100"
@@ -163,9 +163,11 @@
 
             <div class="menuList row">
                 <%
+                    String status = "";
                     ArrayList<Menu> list = (ArrayList<Menu>) request.getAttribute("menuList");
                     if (list != null) {
                         for (Menu menu : list) {
+                            status = menu.isStatus() ? "<span class='text-success'>Available</span>" : "<span class='text-danger'>Out of order</span>";
                             List<String> images = menu.getImages();
                             String image1 = images.size() > 0 ? images.get(0) : "";
                             String image2 = images.size() > 1 ? images.get(1) : "";
@@ -191,22 +193,40 @@
                             </div>
                         </div>
                         <div class="card-body" style="border-top: 2px solid rgb(208, 204, 204)">
-                            <a href="">
+                            <a href="viewDetailMenuServlet?menuid=<%= menu.getId()%>">
                                 <h5 class="card-title"><%= menu.getName()%></h5>
                             </a>
                             <p class="card-text text-danger fw-bold">Price: <%= menu.getTotalPrice()%>$</p>
+                            <p class="card-text fw-bold"><%= status%></p>
                             <div class="row">
                                 <div class="col-12">
-                                    <form action="MainController" method="post" style="display:inline;">
-                                        <input type="hidden" name="itemid" value="<%= menu.getId()%>">
-                                        <input type="hidden" name="action" value="addtocart">
-                                        <input type="hidden" name="actionFrom" value="menu">
-                                        <input type="hidden" name="nextAction" value="openmenu">
+                                    <%
+                                        if (menu.isStatus()) {
+                                    %>
+                                    <form action="MainController" method="post" style="display: inline">
+                                        <input type="hidden" name="itemid" value="<%= menu.getId()%>" />
+                                        <input type="hidden" name="action" value="addtocart" />
+                                        <input type="hidden" name="actionFrom" value="menu" />
+                                        <input type="hidden" name="nextAction" value="openmenu" />
                                         <button class="btn btn-warning w-100 h-100 fw-bold">
                                             <i class="fa fa-shopping-cart"></i>
                                             Add to Cart
                                         </button>
                                     </form>
+                                    <%    } else {
+
+                                    %>
+                                    <form action="MainController" method="post" style="display: inline">
+                                        <input type="hidden" name="itemid" value="<%= menu.getId()%>" />
+                                        <input type="hidden" name="action" value="addtocart" />
+                                        <input type="hidden" name="actionFrom" value="menu" />
+                                        <input type="hidden" name="nextAction" value="openmenu" />
+                                        <button class="btn btn-warning w-100 h-100 fw-bold" disabled>
+                                            <i class="fa fa-shopping-cart"></i>
+                                            Add to Cart
+                                        </button>
+                                    </form>                       
+                                    <% }%>    
                                 </div>
                             </div>
                         </div>

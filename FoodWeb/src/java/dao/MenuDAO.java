@@ -96,6 +96,9 @@ public class MenuDAO {
     public Menu getMenuById(int menuId) {
         Menu menu = null;
         Connection cn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
         try {
             cn = DBUtil.makeConnection();
             if (cn != null) {
@@ -106,7 +109,9 @@ public class MenuDAO {
                         + "    m.description AS menu_description, \n"
                         + "    m.category AS menu_category,\n"
                         + "    d.calories AS dish_calories,\n"
-                        + "    d.image AS dish_image  \n"
+                        + "    d.image AS dish_image,\n"
+                        + "    m.period AS menu_period,\n"
+                        + "    m.day_of_week AS menu_weekly\n"
                         + "FROM \n"
                         + "    Menu m\n"
                         + "JOIN \n"
@@ -116,9 +121,9 @@ public class MenuDAO {
                         + "WHERE \n"
                         + "    m.id = ?;";
 
-                PreparedStatement pst = cn.prepareStatement(sql);
+                pst = cn.prepareStatement(sql);
                 pst.setInt(1, menuId);
-                ResultSet rs = pst.executeQuery();
+                rs = pst.executeQuery();
 
                 String menuName = null;
                 String menuDescription = null;
@@ -126,14 +131,21 @@ public class MenuDAO {
                 int totalCalories = 0;
                 List<String> dishImages = new ArrayList<>();
                 String menuCategory = null;
+                int menuPeriod = 0;
+                int menuWeekly = 0;
+                boolean menuStatus = false;
 
                 while (rs.next()) {
-                    menuName = rs.getString("menu_name");
-                    menuDescription = rs.getString("menu_description");
-                    menuCategory = rs.getString("menu_category");
+                    if (menuName == null) {  // Initialize once
+                        menuName = rs.getString("menu_name");
+                        menuDescription = rs.getString("menu_description");
+                        menuCategory = rs.getString("menu_category");
+                        menuPeriod = rs.getInt("menu_period");
+                        menuWeekly = rs.getInt("menu_weekly");
+                        menuStatus = rs.getBoolean("menu_status");
+                    }
 
                     int dishPrice = rs.getInt("dish_price");
-                    boolean menuStatus = rs.getBoolean("menu_status");
                     int dishCalories = rs.getInt("dish_calories");
                     String dishImage = rs.getString("dish_image");
 
@@ -141,14 +153,22 @@ public class MenuDAO {
 
                     totalPrice += dishPrice;
                     totalCalories += dishCalories;
+                }
 
-                    menu = new Menu(menuId, menuName, totalPrice, menuStatus, menuDescription, menuCategory, totalCalories, dishImages);
+                if (menuName != null) {
+                    menu = new Menu(menuId, menuName, totalPrice, menuPeriod, menuWeekly, menuStatus, menuDescription, menuCategory, totalCalories, dishImages);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pst != null) {
+                    pst.close();
+                }
                 if (cn != null) {
                     cn.close();
                 }
@@ -230,5 +250,5 @@ public class MenuDAO {
         }
         return menus;
     }
-    
+
 }

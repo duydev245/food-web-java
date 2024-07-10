@@ -41,7 +41,7 @@ public class signinServlet extends HttpServlet {
             AccountDAO d = new AccountDAO();
             Account acc = d.checkLogin(email, password);
 
-            if (acc != null) {
+            if (acc != null && acc.isStatus()) {
                 HttpSession session = request.getSession();
                 session.setAttribute("LoginedUser", acc);
                 if (acc.getRole().equals("user")) {

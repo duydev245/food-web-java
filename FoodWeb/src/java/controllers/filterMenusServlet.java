@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author htduy
  */
-public class MainController extends HttpServlet {
+public class filterMenusServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,68 +32,9 @@ public class MainController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            // Nhan action
-            String act = request.getParameter("action");
-
-            if (act == null) {
-                act = "welcome";
-            }
-            String url = "";
-
-            // switch action ra tung case
-            switch (act) {
-                case "welcome":
-                    url = "signin.jsp";
-                    break;
-                case "register":
-                    url = "registerForm.jsp";
-                    break;
-                case "mainindex":
-                    url = "index.jsp";
-                    break;
-                case "adminindex":
-                    url = "adminindex.jsp";
-                    break;
-                case "ERROR":
-                    url = "error.jsp";
-                    break;
-                case "signin":
-                    url = "signinServlet";
-                    break;
-                case "saveuser":
-                    url = "signupServlet";
-                    break;
-                case "opendish":
-                    url = "getItemsServlet";
-                    break;
-                case "openmenu":
-                    url = "getMenusServlet";
-                    break;
-                case "detailMenu":
-                    url = "viewDetailMenuServlet";
-                    break;
-                case "filterMenus":
-                    url = "filterMenusServlet";
-                    break;
-                case "searchDishes":
-                    url = "searchItemsServlet";
-                    break;
-                case "filterDishes":
-                    url = "filterItemsServlet";
-                    break;
-                case "detailDishes":
-                    url = "viewDetailServlet";
-                    break;
-                case "searchMenu":
-                    url = "searchMenuServlet";
-                    break;
-                case "addtocart":
-                    url = "AddToCartServlet";
-                    break;
-                default:
-                    break;
-            }
-            request.getRequestDispatcher(url).forward(request, response);
+            String type = request.getParameter("txtType");
+            String dayOfWeek = request.getParameter("txtWeeklyMenu");
+            String period = request.getParameter("txtPeriod");
         }
     }
 

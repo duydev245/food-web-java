@@ -40,6 +40,18 @@
         <servlet-name>filterItemsServlet</servlet-name>
         <servlet-class>controllers.filterItemsServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>viewDetailServlet</servlet-name>
+        <servlet-class>controllers.viewDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>filterMenusServlet</servlet-name>
+        <servlet-class>controllers.filterMenusServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>viewDetailMenuServlet</servlet-name>
+        <servlet-class>controllers.viewDetailMenuServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainController</servlet-name>
         <url-pattern>/MainController</url-pattern>
@@ -79,6 +91,18 @@
     <servlet-mapping>
         <servlet-name>filterItemsServlet</servlet-name>
         <url-pattern>/filterItemsServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>viewDetailServlet</servlet-name>
+        <url-pattern>/viewDetailServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>filterMenusServlet</servlet-name>
+        <url-pattern>/filterMenusServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>viewDetailMenuServlet</servlet-name>
+        <url-pattern>/viewDetailMenuServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

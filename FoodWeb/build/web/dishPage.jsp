@@ -154,9 +154,11 @@
 
             <div class="dishList row">
                 <%
+                    String status = "";
                     ArrayList<Item> list = (ArrayList<Item>) request.getAttribute("ListItems");
                     if (list != null) {
                         for (Item it : list) {
+                            status = it.isStatus() ? "<span class='text-success'>Available</span>" : "<span class='text-danger'>Out of order</span>";
                 %>
                 <div class="col-4 mb-5">
                     <div class="card">
@@ -166,10 +168,11 @@
                             alt="..."
                             />
                             <div class="card-body text-center">
-                            <a href="">
+                            <a href="viewDetailServlet?itemid=<%= it.getId()%>">
                                 <h5 class="card-title"><%= it.getName()%></h5>
                             </a>
                             <p class="card-text text-danger fw-bold">Price: <%= it.getPrice()%>$</p>
+                            <p class="card-text fw-bold"><%= status%></p>
                             <div class="row">
                                 <div class="col-2">
                                     <a href="#">
@@ -179,6 +182,9 @@
                                     </a>
                                 </div>
                                 <div class="col-10">
+                                    <%
+                                        if (it.isStatus()) {
+                                    %>
                                     <form action="MainController" method="post" style="display:inline;">
                                         <input type="hidden" name="itemid" value="<%= it.getId()%>">
                                         <input type="hidden" name="action" value="addtocart">
@@ -189,6 +195,20 @@
                                             Add to Cart
                                         </button>
                                     </form>
+                                    <%    } else {
+
+                                    %>
+                                    <form action="MainController" method="post" style="display:inline;">
+                                        <input type="hidden" name="itemid" value="<%= it.getId()%>">
+                                        <input type="hidden" name="action" value="addtocart">
+                                        <input type="hidden" name="actionFrom" value="dish">
+                                        <input type="hidden" name="nextAction" value="opendish">
+                                        <button class="btn btn-warning w-100 h-100 fw-bold" disabled>
+                                            <i class="fa fa-shopping-cart"></i>
+                                            Add to Cart
+                                        </button>
+                                    </form>
+                                    <% }%>                                  
                                 </div>
                             </div>
                         </div>

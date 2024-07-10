@@ -5,12 +5,11 @@
  */
 package dto;
 
-import java.io.Serializable;
 /**
  *
  * @author htduy
  */
-public class CartItem implements Serializable {
+public class CartItem {
 
     private Item item;
     private int quantity;

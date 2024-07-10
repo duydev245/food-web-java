@@ -28,6 +28,20 @@ public class Menu {
     public Menu() {
     }
 
+    // getMenuId
+    public Menu(int id, String name, int totalPrice, int period, int dayOfWeek, boolean status, String description, String category, int totalCalories, List<String> images) {
+        this.id = id;
+        this.name = name;
+        this.totalPrice = totalPrice;
+        this.status = status;
+        this.period = period;
+        this.dayOfWeek = dayOfWeek;
+        this.description = description;
+        this.category = category;
+        this.totalCalories = totalCalories;
+        this.images = images;
+    }
+
     public Menu(int id, String name, int totalPrice, boolean status, String description, String category, int totalCalories, List<String> images) {
         this.id = id;
         this.name = name;
