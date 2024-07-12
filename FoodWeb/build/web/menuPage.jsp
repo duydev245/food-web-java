@@ -1,5 +1,6 @@
 <%-- Document : menuPage Created on : Jul 3, 2024, 9:29:18 AM Author : htduy
 --%> 
+<%@page import="dto.Account"%>
 <%@page import="java.util.List"%>
 <%@page import="dto.Menu"%>
 <%@page import="dto.CartItem"%>
@@ -67,6 +68,39 @@
                                     Menus
                                 </a>
                             </li>
+
+                            <%
+                                Account acc = (Account) session.getAttribute("LoginedUser");
+                                if (acc != null) {
+                            %>
+                            <li class="nav-item text-center">
+                                <a
+                                    class="nav-link fs-4 fw-bold"
+                                    href="MainController?action=user&accid=<%= acc.getId()%>"
+                                    role="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >
+                                    <i class="fa fa-user"></i>
+                                </a>
+                            </li>
+                            <%
+                            } else {
+                            %>
+                            <li class="nav-item text-center">
+                                <a
+                                    class="nav-link fs-4 fw-bold"
+                                    href="MainController?action=welcome"
+                                    role="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >
+                                    <i class="fa fa-sign-in-alt"></i>
+                                </a>
+                            </li>
+                            <%
+                                }
+                            %>
 
                             <li class="nav-item text-center">
                                 <a

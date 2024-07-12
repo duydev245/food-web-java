@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author htduy
  */
-public class filterMenusServlet extends HttpServlet {
+public class AdminServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,11 +32,7 @@ public class filterMenusServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            String type = request.getParameter("txtType");
-            String dayOfWeek = request.getParameter("txtWeeklyMenu");
-            String period = request.getParameter("txtPeriod");
-            
-            
+            request.getRequestDispatcher("adminindex.jsp").forward(request, response);
         }
     }
 

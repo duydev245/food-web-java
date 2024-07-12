@@ -36,7 +36,7 @@ public class MainController extends HttpServlet {
             String act = request.getParameter("action");
 
             if (act == null) {
-                act = "welcome";
+                act = "mainindex";
             }
             String url = "";
 
@@ -47,15 +47,15 @@ public class MainController extends HttpServlet {
                     break;
                 case "register":
                     url = "registerForm.jsp";
-                    break;
+                    break;               
                 case "mainindex":
                     url = "index.jsp";
-                    break;
-                case "adminindex":
-                    url = "adminindex.jsp";
-                    break;
+                    break;              
                 case "ERROR":
                     url = "error.jsp";
+                    break;
+                case "user":
+                    url = "userServlet";
                     break;
                 case "signin":
                     url = "signinServlet";
@@ -89,6 +89,19 @@ public class MainController extends HttpServlet {
                     break;
                 case "addtocart":
                     url = "AddToCartServlet";
+                    break;
+                // ADMIN
+                case "adminindex":
+                    url = "AdminServlet";
+                    break;
+                case "userManager":
+                    url = "UserManagerServlet";
+                    break;
+                case "dishManager":
+                    url = "DishManagerServlet";
+                    break;
+                case "orderManager":
+                    url = "OrderManagerServlet";
                     break;
                 default:
                     break;

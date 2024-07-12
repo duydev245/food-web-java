@@ -218,4 +218,121 @@ public class ItemDAO {
         }
         return list;
     }
+
+    public boolean addItem(Item item) {
+        Connection cn = null;
+        boolean result = false;
+        try {
+            cn = DBUtil.makeConnection();
+            if (cn != null) {
+                String sql = "INSERT INTO [DBFOODWEB].[dbo].[Dishes] ([name], [price], [status], [description], [category], [calories], [image], [recipe])\n"
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                PreparedStatement pst = cn.prepareStatement(sql);
+                pst.setString(1, item.getName());
+                pst.setInt(2, item.getPrice());
+                pst.setBoolean(3, item.isStatus());
+                pst.setString(4, item.getDesc());
+                pst.setString(5, item.getCategory());
+                pst.setInt(6, item.getCalories());
+                pst.setString(7, item.getImage1());
+                pst.setString(8, item.getRecipe());
+                result = pst.executeUpdate() > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (cn != null) {
+                    cn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    public boolean deleteItem(int id) {
+        Connection cn = null;
+        boolean result = false;
+        try {
+            cn = DBUtil.makeConnection();
+            if (cn != null) {
+                String sql = "DELETE FROM [DBFOODWEB].[dbo].[Dishes] WHERE [id] = ?";
+                PreparedStatement pst = cn.prepareStatement(sql);
+                pst.setInt(1, id);
+                result = pst.executeUpdate() > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (cn != null) {
+                    cn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    public boolean updateItemStatus(int id) {
+        Connection cn = null;
+        boolean result = false;
+        try {
+            cn = DBUtil.makeConnection();
+            if (cn != null) {
+                String sql = "UPDATE [DBFOODWEB].[dbo].[Dishes] SET [status] = ~[status] WHERE [id] = ?";
+                PreparedStatement pst = cn.prepareStatement(sql);
+                pst.setInt(1, id);
+                result = pst.executeUpdate() > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (cn != null) {
+                    cn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    public boolean updateItem(Item item) {
+        Connection cn = null;
+        boolean result = false;
+        try {
+            cn = DBUtil.makeConnection();
+            if (cn != null) {
+                String sql = "UPDATE [DBFOODWEB].[dbo].[Dishes] SET [name] = ?, [price] = ?, [status] = ?, [description] = ?, [category] = ?, [calories] = ?, [image] = ?, [recipe] = ?\n"
+                        + "WHERE [id] = ?";
+                PreparedStatement pst = cn.prepareStatement(sql);
+                pst.setString(1, item.getName());
+                pst.setInt(2, item.getPrice());
+                pst.setBoolean(3, item.isStatus());
+                pst.setString(4, item.getDesc());
+                pst.setString(5, item.getCategory());
+                pst.setInt(6, item.getCalories());
+                pst.setString(7, item.getImage1());
+                pst.setString(8, item.getRecipe());
+                pst.setInt(9, item.getId());
+                result = pst.executeUpdate() > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (cn != null) {
+                    cn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
 }

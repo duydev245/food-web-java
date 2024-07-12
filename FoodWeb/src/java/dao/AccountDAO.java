@@ -114,6 +114,7 @@ public class AccountDAO {
                 table = pst.executeQuery();
 
                 if (table != null && table.next()) {
+                    int id = table.getInt("id");
                     String fullName = table.getString("full_name");
                     String dbPassword = table.getString("password");
                     String dbEmail = table.getString("email");
@@ -125,7 +126,7 @@ public class AccountDAO {
                     String role = table.getString("role");
                     boolean status = table.getBoolean("status");
 
-                    rs = new Account(fullName, dbPassword, dbEmail, phone, address, wardId, districtId, cityId, role, status);
+                    rs = new Account(id, fullName, dbPassword, dbEmail, phone, address, wardId, districtId, cityId, role, status);
                 }
             }
         } catch (Exception e) {
@@ -159,7 +160,7 @@ public class AccountDAO {
                 PreparedStatement pstmt = conn.prepareStatement(sql);
                 ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
-                    String id = rs.getString("id");
+                    int id = rs.getInt("id");
                     String fullName = rs.getString("full_name");
                     String email = rs.getString("email");
                     String phone = rs.getString("phone");
@@ -187,6 +188,118 @@ public class AccountDAO {
             }
         }
         return accountList;
+    }
+
+    public void addAccount(Account account) {
+        Connection conn = null;
+        try {
+            conn = DBUtil.makeConnection();
+            if (conn != null) {
+                String sql = "INSERT INTO Accounts (full_name, email, phone, address, ward_id, district_id, city_id, role, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, account.getFullName());
+                pstmt.setString(2, account.getEmail());
+                pstmt.setString(3, account.getPhone());
+                pstmt.setString(4, account.getAddress());
+                pstmt.setInt(5, account.getWardId());
+                pstmt.setInt(6, account.getDistrictId());
+                pstmt.setInt(7, account.getCityId());
+                pstmt.setString(8, account.getRole());
+                pstmt.setBoolean(9, account.isStatus());
+                pstmt.executeUpdate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void updateAccount(Account account) {
+        Connection conn = null;
+        try {
+            conn = DBUtil.makeConnection();
+            if (conn != null) {
+                String sql = "UPDATE Accounts SET full_name = ?, email = ?, phone = ?, address = ?, ward_id = ?, district_id = ?, city_id = ?, role = ?, status = ? WHERE id = ?";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, account.getFullName());
+                pstmt.setString(2, account.getEmail());
+                pstmt.setString(3, account.getPhone());
+                pstmt.setString(4, account.getAddress());
+                pstmt.setInt(5, account.getWardId());
+                pstmt.setInt(6, account.getDistrictId());
+                pstmt.setInt(7, account.getCityId());
+                pstmt.setString(8, account.getRole());
+                pstmt.setBoolean(9, account.isStatus());
+                pstmt.setInt(10, account.getId());
+                pstmt.executeUpdate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deleteAccount(String id) {
+        Connection conn = null;
+        try {
+            conn = DBUtil.makeConnection();
+            if (conn != null) {
+                String sql = "DELETE FROM Accounts WHERE id = ?";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, id);
+                pstmt.executeUpdate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void updateAccountStatus(String id, boolean status) {
+        Connection conn = null;
+        try {
+            conn = DBUtil.makeConnection();
+            if (conn != null) {
+                String sql = "UPDATE [DBFOODWEB].[dbo].[Accounts]\n"
+                        + "SET [status] = ?\n"
+                        + "WHERE [id] = ?;";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setBoolean(1, status);
+                pstmt.setString(2, id);
+                pstmt.executeUpdate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

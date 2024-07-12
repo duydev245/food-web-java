@@ -1,4 +1,5 @@
 <%-- Document : index Created on : Jun 25, 2024, 4:26:52 PM Author : htduy --%>
+<%@page import="dto.Account"%>
 <%@page import="dto.CartItem"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -64,6 +65,54 @@
                                     Menus
                                 </a>
                             </li>
+
+                            <%
+                                Account acc = (Account) session.getAttribute("LoginedUser");
+                                if (acc != null) {
+                                    if (acc.getRole().equals("user")) {
+                            %>
+                            <li class="nav-item text-center">
+                                <a
+                                    class="nav-link fs-4 fw-bold"
+                                    href="MainController?action=user&accid=<%= acc.getId()%>"
+                                    role="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >
+                                    <i class="fa fa-user"></i>
+                                </a>
+                            </li>       
+                            <%
+                            } else if (acc.getRole().equals("admin")) {
+                            %>
+                            <li class="nav-item text-center">
+                                <a
+                                    class="nav-link fs-4 fw-bold"
+                                    href="MainController?action=adminindex"
+                                    role="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >
+                                    <i class="fa fa-user"></i>
+                                </a>
+                            </li> 
+                            <%                                }
+                            } else {
+                            %>
+                            <li class="nav-item text-center">
+                                <a
+                                    class="nav-link fs-4 fw-bold"
+                                    href="MainController?action=welcome"
+                                    role="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >
+                                    <i class="fa fa-sign-in-alt"></i>
+                                </a>
+                            </li>
+                            <%
+                                }
+                            %>
 
                             <li class="nav-item text-center">
                                 <a

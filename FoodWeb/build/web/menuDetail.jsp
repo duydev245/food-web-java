@@ -4,6 +4,7 @@
     Author     : htduy
 --%>
 
+<%@page import="dto.Account"%>
 <%@page import="java.util.List"%>
 <%@page import="dto.Menu"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -39,10 +40,7 @@
         <header>
             <nav class="navbar navbar-expand-lg">
                 <div class="container">
-                    <a
-                        class="navbar-brand me-5 py-2 fs-4 fw-bold"
-                        href="MainController?action=mainindex"
-                        >
+                    <a class="navbar-brand me-5 py-2 fs-4 fw-bold" href="MainController?action=mainindex">
                         <i class="fa fa-utensils"></i>
                         Do Food - Delicious Food
                     </a>
@@ -72,6 +70,39 @@
                                     Menus
                                 </a>
                             </li>
+
+                            <%
+                                Account acc = (Account) session.getAttribute("LoginedUser");
+                                if (acc != null) {
+                            %>
+                            <li class="nav-item text-center">
+                                <a
+                                    class="nav-link fs-4 fw-bold"
+                                    href="MainController?action=user&accid=<%= acc.getId()%>"
+                                    role="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >
+                                    <i class="fa fa-user"></i>
+                                </a>
+                            </li>
+                            <%
+                            } else {
+                            %>
+                            <li class="nav-item text-center">
+                                <a
+                                    class="nav-link fs-4 fw-bold"
+                                    href="MainController?action=welcome"
+                                    role="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >
+                                    <i class="fa fa-sign-in-alt"></i>
+                                </a>
+                            </li>
+                            <%
+                                }
+                            %>
                         </ul>
                     </div>
                 </div>

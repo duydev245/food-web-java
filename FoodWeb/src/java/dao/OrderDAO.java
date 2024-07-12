@@ -11,6 +11,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import mylib.DBUtil;
 
 /**
@@ -67,4 +70,163 @@ public class OrderDAO {
         }
         return orderList;
     }
+
+    // Method to get all orders grouped by address
+    public Map<String, List<Order>> getOrdersGroupedByAddress() {
+        Map<String, List<Order>> orderMap = new HashMap<>();
+        Connection conn = null;
+        try {
+            conn = DBUtil.makeConnection();
+            if (conn != null) {
+                String sql = "SELECT o.id AS orderId, a.full_name AS accountName, o.order_date AS orderDate, "
+                        + "o.ship_date AS shipDate, o.ship_address AS shipAddress, c.name AS shipCity, "
+                        + "d.name AS shipDistrict, w.name AS shipWard, o.total_price AS totalPrice, "
+                        + "o.customer_notes AS customerNote, o.status AS status "
+                        + "FROM Orders o "
+                        + "JOIN Accounts a ON o.account_id = a.id "
+                        + "JOIN City c ON o.ship_city_id = c.id "
+                        + "JOIN District d ON o.ship_district_id = d.id "
+                        + "JOIN Ward w ON o.ship_ward_id = w.id";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    int orderId = rs.getInt("orderId");
+                    String accountName = rs.getString("accountName");
+                    Date orderDate = rs.getDate("orderDate");
+                    Date shipDate = rs.getDate("shipDate");
+                    String shipAddress = rs.getString("shipAddress");
+                    String shipCity = rs.getString("shipCity");
+                    String shipDistrict = rs.getString("shipDistrict");
+                    String shipWard = rs.getString("shipWard");
+                    double totalPrice = rs.getDouble("totalPrice");
+                    String customerNote = rs.getString("customerNote");
+                    boolean status = rs.getBoolean("status");
+
+                    // Create Order object from the retrieved data
+                    Order order = new Order(orderId, accountName, orderDate, shipDate, shipAddress, shipCity, shipDistrict, shipWard, totalPrice, customerNote, status);
+
+                    // Group orders by address
+                    String fullAddress = shipAddress + ", " + shipWard + ", " + shipDistrict + ", " + shipCity;
+                    orderMap.computeIfAbsent(fullAddress, k -> new ArrayList<>()).add(order);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return orderMap;
+    }
+
+    // Method to search orders by date
+    public List<Order> searchOrdersByDate(Date date) {
+        List<Order> orderList = new ArrayList<>();
+        Connection conn = null;
+        try {
+            conn = DBUtil.makeConnection();
+            if (conn != null) {
+                String sql = "SELECT o.id AS orderId, a.full_name AS accountName, o.order_date AS orderDate, "
+                        + "o.ship_date AS shipDate, o.ship_address AS shipAddress, c.name AS shipCity, "
+                        + "d.name AS shipDistrict, w.name AS shipWard, o.total_price AS totalPrice, "
+                        + "o.customer_notes AS customerNote, o.status AS status "
+                        + "FROM Orders o "
+                        + "JOIN Accounts a ON o.account_id = a.id "
+                        + "JOIN City c ON o.ship_city_id = c.id "
+                        + "JOIN District d ON o.ship_district_id = d.id "
+                        + "JOIN Ward w ON o.ship_ward_id = w.id "
+                        + "WHERE o.order_date = ?";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setDate(1, date);
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    int orderId = rs.getInt("orderId");
+                    String accountName = rs.getString("accountName");
+                    Date orderDate = rs.getDate("orderDate");
+                    Date shipDate = rs.getDate("shipDate");
+                    String shipAddress = rs.getString("shipAddress");
+                    String shipCity = rs.getString("shipCity");
+                    String shipDistrict = rs.getString("shipDistrict");
+                    String shipWard = rs.getString("shipWard");
+                    double totalPrice = rs.getDouble("totalPrice");
+                    String customerNote = rs.getString("customerNote");
+                    boolean status = rs.getBoolean("status");
+
+                    // Create Order object from the retrieved data
+                    Order order = new Order(orderId, accountName, orderDate, shipDate, shipAddress, shipCity, shipDistrict, shipWard, totalPrice, customerNote, status);
+                    orderList.add(order);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return orderList;
+    }
+
+    // Method to search orders by phone or email
+    public List<Order> searchOrdersByCustomerInfo(String customerInfo) {
+        List<Order> orderList = new ArrayList<>();
+        Connection conn = null;
+        try {
+            conn = DBUtil.makeConnection();
+            if (conn != null) {
+                String sql = "SELECT o.id AS orderId, a.full_name AS accountName, o.order_date AS orderDate, "
+                        + "o.ship_date AS shipDate, o.ship_address AS shipAddress, c.name AS shipCity, "
+                        + "d.name AS shipDistrict, w.name AS shipWard, o.total_price AS totalPrice, "
+                        + "o.customer_notes AS customerNote, o.status AS status "
+                        + "FROM Orders o "
+                        + "JOIN Accounts a ON o.account_id = a.id "
+                        + "JOIN City c ON o.ship_city_id = c.id "
+                        + "JOIN District d ON o.ship_district_id = d.id "
+                        + "JOIN Ward w ON o.ship_ward_id = w.id "
+                        + "WHERE a.phone LIKE ? OR a.email LIKE ?";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, "%" + customerInfo + "%");
+                pstmt.setString(2, "%" + customerInfo + "%");
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    int orderId = rs.getInt("orderId");
+                    String accountName = rs.getString("accountName");
+                    Date orderDate = rs.getDate("orderDate");
+                    Date shipDate = rs.getDate("shipDate");
+                    String shipAddress = rs.getString("shipAddress");
+                    String shipCity = rs.getString("shipCity");
+                    String shipDistrict = rs.getString("shipDistrict");
+                    String shipWard = rs.getString("shipWard");
+                    double totalPrice = rs.getDouble("totalPrice");
+                    String customerNote = rs.getString("customerNote");
+                    boolean status = rs.getBoolean("status");
+
+                    // Create Order object from the retrieved data
+                    Order order = new Order(orderId, accountName, orderDate, shipDate, shipAddress, shipCity, shipDistrict, shipWard, totalPrice, customerNote, status);
+                    orderList.add(order);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return orderList;
+    }
+    
 }

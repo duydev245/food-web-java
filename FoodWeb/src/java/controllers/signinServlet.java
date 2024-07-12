@@ -37,23 +37,32 @@ public class signinServlet extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
             String email = request.getParameter("txtemail");
             String password = request.getParameter("txtpassword");
-            
-            AccountDAO d = new AccountDAO();
-            Account acc = d.checkLogin(email, password);
 
-            if (acc != null && acc.isStatus()) {
-                HttpSession session = request.getSession();
-                session.setAttribute("LoginedUser", acc);
-                if (acc.getRole().equals("user")) {
-                    request.getRequestDispatcher("MainController?action=mainindex").forward(request, response);
-                } else if (acc.getRole().equals("admin")) {
-                    request.getRequestDispatcher("MainController?action=adminindex").forward(request, response);
+            if (email != null && password != null) {
+                AccountDAO d = new AccountDAO();
+                Account acc = d.checkLogin(email, password);
+
+                if (acc != null) {
+                    if (!acc.isStatus()) {
+                        request.getRequestDispatcher("bannedUser.jsp").forward(request, response);
+                        return;
+                    }
+
+                    HttpSession session = request.getSession();
+                    session.setAttribute("LoginedUser", acc);
+                    if (acc.getRole().equals("user")) {
+                        request.getRequestDispatcher("MainController?action=mainindex").forward(request, response);
+                    } else if (acc.getRole().equals("admin")) {
+                        request.getRequestDispatcher("MainController?action=adminindex").forward(request, response);
+                    }
+                    
+                } else {
+                    String msg = "*Invalid account";
+                    request.setAttribute("ERROR", msg);
+                    request.getRequestDispatcher("MainController?action=welcome").forward(request, response);
                 }
-            } else {
-                String msg = "*Invalid account";
-                request.setAttribute("ERROR", msg);
-                request.getRequestDispatcher("MainController?action=welcome").forward(request, response);
             }
+
         }
     }
 

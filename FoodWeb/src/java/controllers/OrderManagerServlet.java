@@ -5,8 +5,13 @@
  */
 package controllers;
 
+import dao.OrderDAO;
+import dto.Order;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author htduy
  */
-public class filterMenusServlet extends HttpServlet {
+public class OrderManagerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -30,14 +35,45 @@ public class filterMenusServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String type = request.getParameter("txtType");
-            String dayOfWeek = request.getParameter("txtWeeklyMenu");
-            String period = request.getParameter("txtPeriod");
-            
-            
+        String action = request.getParameter("action");
+        OrderDAO orderDAO = new OrderDAO();
+
+        try {
+            switch (action) {
+                case "searchByDate":
+                    searchOrdersByDate(request, orderDAO);
+                    break;
+                case "searchByCustomerInfo":
+                    searchOrdersByCustomerInfo(request, orderDAO);
+                    break;
+                case "groupByAddress":
+                    groupOrdersByAddress(request, orderDAO);
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        request.getRequestDispatcher("orderManager.jsp").forward(request, response);
+    }
+
+    private void searchOrdersByDate(HttpServletRequest request, OrderDAO orderDAO) throws Exception {
+        Date date = Date.valueOf(request.getParameter("orderDate"));
+        List<Order> orders = orderDAO.searchOrdersByDate(date);
+        request.setAttribute("OrderList", orders);
+    }
+
+    private void searchOrdersByCustomerInfo(HttpServletRequest request, OrderDAO orderDAO) throws Exception {
+        String customerInfo = request.getParameter("customerInfo");
+        List<Order> orders = orderDAO.searchOrdersByCustomerInfo(customerInfo);
+        request.setAttribute("OrderList", orders);
+    }
+
+    private void groupOrdersByAddress(HttpServletRequest request, OrderDAO orderDAO) throws Exception {
+        Map<String, List<Order>> ordersGroupedByAddress = orderDAO.getOrdersGroupedByAddress();
+        request.setAttribute("OrdersGroupedByAddress", ordersGroupedByAddress);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

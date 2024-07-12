@@ -11,12 +11,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author htduy
  */
-public class filterMenusServlet extends HttpServlet {
+public class signoutServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,11 +33,11 @@ public class filterMenusServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            String type = request.getParameter("txtType");
-            String dayOfWeek = request.getParameter("txtWeeklyMenu");
-            String period = request.getParameter("txtPeriod");
-            
-            
+            HttpSession session = request.getSession();
+            if (session != null) {
+                session.invalidate();
+                request.getRequestDispatcher("MainController?action=mainindex").forward(request, response);
+            }
         }
     }
 

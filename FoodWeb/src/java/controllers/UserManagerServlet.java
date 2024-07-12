@@ -5,8 +5,11 @@
  */
 package controllers;
 
+import dao.AccountDAO;
+import dto.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author htduy
  */
-public class filterMenusServlet extends HttpServlet {
+public class UserManagerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -30,14 +33,45 @@ public class filterMenusServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String type = request.getParameter("txtType");
-            String dayOfWeek = request.getParameter("txtWeeklyMenu");
-            String period = request.getParameter("txtPeriod");
-            
-            
+
+        String action = request.getParameter("action");
+        AccountDAO d = new AccountDAO();
+
+        if ("update".equals(action)) {
+            int id = Integer.parseInt(request.getParameter("userId"));
+            String fullName = request.getParameter("userName");
+            String email = request.getParameter("userEmail");
+            String phone = request.getParameter("userPhone");
+            String address = request.getParameter("userAddress");
+            int wardId = Integer.parseInt(request.getParameter("userWardId"));
+            int districtId = Integer.parseInt(request.getParameter("userDistrictId"));
+            int cityId = Integer.parseInt(request.getParameter("userCityId"));
+            String role = request.getParameter("userRole");
+            boolean status = Boolean.parseBoolean(request.getParameter("userStatus"));
+
+            Account updatedAccount = new Account(id, fullName, email, phone, address, wardId, districtId, cityId, role, status);
+            d.updateAccount(updatedAccount);
+
+        } else if ("delete".equals(action)) {
+            String id = request.getParameter("userId");
+            d.deleteAccount(id);
+
+        } else if ("block".equals(action)) {
+            String id = request.getParameter("userId");
+            boolean currentStatus = Boolean.parseBoolean(request.getParameter("userStatus"));
+
+            // Toggle the status (block/unblock)
+            boolean newStatus = !currentStatus;
+
+            // Update account status
+            d.updateAccountStatus(id, newStatus);
         }
+
+        // Redirect back to the user management page
+        ArrayList<Account> list = d.getAllAccounts();
+        request.setAttribute("ListUser", list);
+        request.getRequestDispatcher("userManager.jsp").forward(request, response);
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -1,5 +1,6 @@
 <%-- Document : detailDishes Created on : Jul 10, 2024, 9:51:17 AM Author :
-htduy --%> <%@page import="dto.Item"%>
+htduy --%> <%@page import="dto.Account"%>
+<%@page import="dto.Item"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="dto.CartItem"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -35,10 +36,7 @@ htduy --%> <%@page import="dto.Item"%>
         <header>
             <nav class="navbar navbar-expand-lg">
                 <div class="container">
-                    <a
-                        class="navbar-brand me-5 py-2 fs-4 fw-bold"
-                        href="MainController?action=mainindex"
-                        >
+                    <a class="navbar-brand me-5 py-2 fs-4 fw-bold" href="MainController?action=mainindex">
                         <i class="fa fa-utensils"></i>
                         Do Food - Delicious Food
                     </a>
@@ -69,6 +67,38 @@ htduy --%> <%@page import="dto.Item"%>
                                 </a>
                             </li>
 
+                            <%
+                                Account acc = (Account) session.getAttribute("LoginedUser");
+                                if (acc != null) {
+                            %>
+                            <li class="nav-item text-center">
+                                <a
+                                    class="nav-link fs-4 fw-bold"
+                                    href="MainController?action=user&accid=<%= acc.getId()%>"
+                                    role="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >
+                                    <i class="fa fa-user"></i>
+                                </a>
+                            </li>
+                            <%
+                            } else {
+                            %>
+                            <li class="nav-item text-center">
+                                <a
+                                    class="nav-link fs-4 fw-bold"
+                                    href="MainController?action=welcome"
+                                    role="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >
+                                    <i class="fa fa-sign-in-alt"></i>
+                                </a>
+                            </li>
+                            <%
+                                }
+                            %>
                         </ul>
                     </div>
                 </div>

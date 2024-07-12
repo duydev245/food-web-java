@@ -11,6 +11,7 @@ package dto;
  */
 public class Account {
 
+    private int id;
     private String fullName;
     private String password;
     private String email;
@@ -24,8 +25,9 @@ public class Account {
 
     public Account() {
     }
-
-    public Account(String fullName, String password, String email, String phone, String address, int wardId, int districtId, int cityId, String role, boolean status) {
+    //Password
+    public Account(int id, String fullName, String password, String email, String phone, String address, int wardId, int districtId, int cityId, String role, boolean status) {
+        this.id = id;
         this.fullName = fullName;
         this.password = password;
         this.email = email;
@@ -36,6 +38,28 @@ public class Account {
         this.cityId = cityId;
         this.role = role;
         this.status = status;
+    }
+
+    //Non-password
+    public Account(int id, String fullName, String email, String phone, String address, int wardId, int districtId, int cityId, String role, boolean status) {
+        this.id = id;
+        this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.wardId = wardId;
+        this.districtId = districtId;
+        this.cityId = cityId;
+        this.role = role;
+        this.status = status;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getFullName() {
@@ -118,5 +142,4 @@ public class Account {
         this.status = status;
     }
 
-    
 }
