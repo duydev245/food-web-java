@@ -119,6 +119,37 @@
                     imageArray[i] = (i < images.size()) ? images.get(i) : "";
                 }
                 String status = mn.isStatus() ? "<h5 class='text-success'>Available</h5>" : "<h5 class='text-danger'>Out of order</h5>";
+                String menuPeriod = "";
+                switch (mn.getPeriod()) {
+                    case 1:
+                        menuPeriod = "Brunch";
+                        break;
+                    case 2:
+                        menuPeriod = "Lunch";
+                        break;
+                    case 3:
+                        menuPeriod = "Dinner";
+                        break;
+                    default:
+                        break;
+                }
+
+                String weeklyMenu = "";
+                switch (mn.getDayOfWeek()) {
+                    case 1:
+                        weeklyMenu = "Jul 14 - Jul 20";
+                        break;
+                    case 2:
+                        weeklyMenu = "Jul 21 - Jul 27";
+                        break;
+                    case 3:
+                        weeklyMenu = "Jul 28 - Aug 3";
+                        break;
+                    default:
+                        break;
+                }
+
+
             %>
             <div class="row">
                 <h2 class="col-12 mb-2 text-start fs-1">
@@ -135,7 +166,15 @@
                 </div>
                 <div class="col-4">
                     <div>
-                        <h3 class="text-center">Nutrition Per Serving</h3>
+                        <h3 class="text-center">Detail of Menu</h3>
+                        <div class="d-flex align-items-center justify-content-around">
+                            <h5>Period:</h5>
+                            <h5><%= menuPeriod%></h5>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-around">
+                            <h5>Weekly Menu:</h5>
+                            <h5><%= weeklyMenu%></h5>
+                        </div>
                         <div class="d-flex align-items-center justify-content-around">
                             <h5>Total calories:</h5>
                             <h5><%= mn.getTotalCalories()%> kcal</h5>

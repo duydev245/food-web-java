@@ -5,8 +5,11 @@
  */
 package controllers;
 
+import dao.MenuDAO;
+import dto.Menu;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,10 +36,15 @@ public class filterMenusServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             String type = request.getParameter("txtType");
-            String dayOfWeek = request.getParameter("txtWeeklyMenu");
             String period = request.getParameter("txtPeriod");
-            
-            
+            String weeklyMenu = request.getParameter("txtWeeklyMenu");
+
+            MenuDAO d = new MenuDAO();
+            ArrayList<Menu> menuList = d.getMenusFilter(type, period, weeklyMenu);
+
+            request.setAttribute("menuList", menuList);
+            request.getRequestDispatcher("menuPage.jsp").forward(request, response);
+
         }
     }
 

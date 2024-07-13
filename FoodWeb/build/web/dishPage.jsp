@@ -202,7 +202,7 @@
                             alt="..."
                             />
                             <div class="card-body text-center">
-                            <a href="viewDetailServlet?itemid=<%= it.getId()%>">
+                            <a href="MainController?action=detailDishes&itemid=<%= it.getId()%>">
                                 <h5 class="card-title"><%= it.getName()%></h5>
                             </a>
                             <p class="card-text text-danger fw-bold">Price: <%= it.getPrice()%>$</p>

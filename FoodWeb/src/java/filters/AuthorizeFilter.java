@@ -5,7 +5,7 @@ package filters;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+import dto.Account;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -25,23 +25,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author htduy
  */
 public class AuthorizeFilter implements Filter {
-    
+
     private static final boolean debug = false;
 
     // The filter configuration object we are associated with.  If
     // this value is null, this filter instance is not currently
     // configured. 
     private FilterConfig filterConfig = null;
-    
+
     public AuthorizeFilter() {
-    }    
-    
+    }
+
     private void doBeforeProcessing(RequestWrapper request, ResponseWrapper response)
             throws IOException, ServletException {
         if (debug) {
@@ -77,8 +78,8 @@ public class AuthorizeFilter implements Filter {
 	    log(buf.toString());
 	}
          */
-    }    
-    
+    }
+
     private void doAfterProcessing(RequestWrapper request, ResponseWrapper response)
             throws IOException, ServletException {
         if (debug) {
@@ -134,48 +135,22 @@ public class AuthorizeFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain)
             throws IOException, ServletException {
-        
-        if (debug) {
-            log("AuthorizeFilter:doFilter()");
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse res = (HttpServletResponse) response;
+        HttpSession session = req.getSession(false);
+
+        // Check if the session is null or the user is not logged in
+        if (session == null || session.getAttribute("LoginedUser") == null) {
+            res.sendRedirect("MainController?action=welcome");
+            return; // Make sure to return to prevent further processing
         }
 
-        // Create wrappers for the request and response objects.
-        // Using these, you can extend the capabilities of the
-        // request and response, for example, allow setting parameters
-        // on the request before sending the request to the rest of the filter chain,
-        // or keep track of the cookies that are set on the response.
-        //
-        // Caveat: some servers do not handle wrappers very well for forward or
-        // include requests.
-        RequestWrapper wrappedRequest = new RequestWrapper((HttpServletRequest) request);
-        ResponseWrapper wrappedResponse = new ResponseWrapper((HttpServletResponse) response);
-        
-        doBeforeProcessing(wrappedRequest, wrappedResponse);
-        
-        Throwable problem = null;
-        
-        try {
-            chain.doFilter(wrappedRequest, wrappedResponse);
-        } catch (Throwable t) {
-            // If an exception is thrown somewhere down the filter chain,
-            // we still want to execute our after processing, and then
-            // rethrow the problem after that.
-            problem = t;
-            t.printStackTrace();
-        }
-        
-        doAfterProcessing(wrappedRequest, wrappedResponse);
-
-        // If there was a problem, we want to rethrow it if it is
-        // a known type, otherwise log it.
-        if (problem != null) {
-            if (problem instanceof ServletException) {
-                throw (ServletException) problem;
-            }
-            if (problem instanceof IOException) {
-                throw (IOException) problem;
-            }
-            sendProcessingError(problem, response);
+        // Check if the logged-in user is an admin
+        Account acc = (Account) session.getAttribute("LoginedUser");
+        if ("admin".equals(acc.getRole())) {
+            chain.doFilter(request, response);
+        } else {
+            res.sendRedirect("403page.jsp");
         }
     }
 
@@ -198,16 +173,16 @@ public class AuthorizeFilter implements Filter {
     /**
      * Destroy method for this filter
      */
-    public void destroy() {        
+    public void destroy() {
     }
 
     /**
      * Init method for this filter
      */
-    public void init(FilterConfig filterConfig) {        
+    public void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig;
         if (filterConfig != null) {
-            if (debug) {                
+            if (debug) {
                 log("AuthorizeFilter: Initializing filter");
             }
         }
@@ -225,22 +200,22 @@ public class AuthorizeFilter implements Filter {
         sb.append(filterConfig);
         sb.append(")");
         return (sb.toString());
-        
+
     }
-    
+
     private void sendProcessingError(Throwable t, ServletResponse response) {
-        String stackTrace = getStackTrace(t);        
-        
+        String stackTrace = getStackTrace(t);
+
         if (stackTrace != null && !stackTrace.equals("")) {
             try {
                 response.setContentType("text/html");
                 PrintStream ps = new PrintStream(response.getOutputStream());
-                PrintWriter pw = new PrintWriter(ps);                
+                PrintWriter pw = new PrintWriter(ps);
                 pw.print("<html>\n<head>\n<title>Error</title>\n</head>\n<body>\n"); //NOI18N
 
                 // PENDING! Localize this for next official release
-                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");                
-                pw.print(stackTrace);                
+                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");
+                pw.print(stackTrace);
                 pw.print("</pre></body>\n</html>"); //NOI18N
                 pw.close();
                 ps.close();
@@ -257,7 +232,7 @@ public class AuthorizeFilter implements Filter {
             }
         }
     }
-    
+
     public static String getStackTrace(Throwable t) {
         String stackTrace = null;
         try {
@@ -271,9 +246,9 @@ public class AuthorizeFilter implements Filter {
         }
         return stackTrace;
     }
-    
+
     public void log(String msg) {
-        filterConfig.getServletContext().log(msg);        
+        filterConfig.getServletContext().log(msg);
     }
 
     /**
@@ -284,7 +259,7 @@ public class AuthorizeFilter implements Filter {
      * access to the wrapped request using the method getRequest()
      */
     class RequestWrapper extends HttpServletRequestWrapper {
-        
+
         public RequestWrapper(HttpServletRequest request) {
             super(request);
         }
@@ -293,12 +268,12 @@ public class AuthorizeFilter implements Filter {
         // you must also override the getParameter, getParameterValues, getParameterMap,
         // and getParameterNames methods.
         protected Hashtable localParams = null;
-        
+
         public void setParameter(String name, String[] values) {
             if (debug) {
                 System.out.println("AuthorizeFilter::setParameter(" + name + "=" + values + ")" + " localParams = " + localParams);
             }
-            
+
             if (localParams == null) {
                 localParams = new Hashtable();
                 // Copy the parameters from the underlying request.
@@ -312,7 +287,7 @@ public class AuthorizeFilter implements Filter {
             }
             localParams.put(name, values);
         }
-        
+
         @Override
         public String getParameter(String name) {
             if (debug) {
@@ -331,7 +306,7 @@ public class AuthorizeFilter implements Filter {
             }
             return (val == null ? null : val.toString());
         }
-        
+
         @Override
         public String[] getParameterValues(String name) {
             if (debug) {
@@ -342,7 +317,7 @@ public class AuthorizeFilter implements Filter {
             }
             return (String[]) localParams.get(name);
         }
-        
+
         @Override
         public Enumeration getParameterNames() {
             if (debug) {
@@ -352,8 +327,8 @@ public class AuthorizeFilter implements Filter {
                 return getRequest().getParameterNames();
             }
             return localParams.keys();
-        }        
-        
+        }
+
         @Override
         public Map getParameterMap() {
             if (debug) {
@@ -374,9 +349,9 @@ public class AuthorizeFilter implements Filter {
      * get access to the wrapped response using the method getResponse()
      */
     class ResponseWrapper extends HttpServletResponseWrapper {
-        
+
         public ResponseWrapper(HttpServletResponse response) {
-            super(response);            
+            super(response);
         }
 
         // You might, for example, wish to know what cookies were set on the response
@@ -403,5 +378,5 @@ public class AuthorizeFilter implements Filter {
 	}
          */
     }
-    
+
 }

@@ -155,7 +155,7 @@
                     </button>
                 </form>
 
-                <form action="MainController" method="get" class="mt-4">
+                <form action="MainController" method="post" class="mt-4">
                     <div class="row">
                         <div class="col-3">
                             <select name="txtType" class="form-select fw-bold">
@@ -227,7 +227,7 @@
                             </div>
                         </div>
                         <div class="card-body" style="border-top: 2px solid rgb(208, 204, 204)">
-                            <a href="viewDetailMenuServlet?menuid=<%= menu.getId()%>">
+                            <a href="MainController?action=detailMenu&menuid=<%= menu.getId()%>">
                                 <h5 class="card-title"><%= menu.getName()%></h5>
                             </a>
                             <p class="card-text text-danger fw-bold">Price: <%= menu.getTotalPrice()%>$</p>
