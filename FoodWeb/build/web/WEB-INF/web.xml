@@ -88,6 +88,30 @@
         <servlet-name>AdminServlet</servlet-name>
         <servlet-class>controllers.AdminServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>saveOrderServlet</servlet-name>
+        <servlet-class>controllers.saveOrderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddToCustomerPlan</servlet-name>
+        <servlet-class>controllers.AddToCustomerPlan</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>deleteFromPlan</servlet-name>
+        <servlet-class>controllers.deleteFromPlan</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>deleteMealPlanServlet</servlet-name>
+        <servlet-class>controllers.deleteMealPlanServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>updateInforServlet</servlet-name>
+        <servlet-class>controllers.updateInforServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>userDetailServlet</servlet-name>
+        <servlet-class>controllers.userDetailServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainController</servlet-name>
         <url-pattern>/MainController</url-pattern>
@@ -163,6 +187,30 @@
     <servlet-mapping>
         <servlet-name>AdminServlet</servlet-name>
         <url-pattern>/AdminServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>saveOrderServlet</servlet-name>
+        <url-pattern>/saveOrderServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddToCustomerPlan</servlet-name>
+        <url-pattern>/AddToCustomerPlan</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>deleteFromPlan</servlet-name>
+        <url-pattern>/deleteFromPlan</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>deleteMealPlanServlet</servlet-name>
+        <url-pattern>/deleteMealPlanServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>updateInforServlet</servlet-name>
+        <url-pattern>/updateInforServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>userDetailServlet</servlet-name>
+        <url-pattern>/userDetailServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

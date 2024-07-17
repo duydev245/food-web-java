@@ -15,31 +15,44 @@ public class Order {
 
     private int orderId;
     private String accountName;
-    private Date oderDate;
+    private Date orderDate;
     private Date shipDate;
     private String shipAddress;
     private String shipCity;
-    private String shipDistric;
+    private String shipDistrict;
     private String shipWard;
     private double totalPrice;
     private String customerNote;
-    private boolean satus;
+    private int status;
 
     public Order() {
     }
 
-    public Order(int orderId, String accountName, Date oderDate, Date shipDate, String shipAddress, String shipCity, String shipDistric, String shipWard, double totalPrice, String customerNote, boolean satus) {
+    public Order(int orderId, String accountName, Date orderDate, Date shipDate, String shipAddress, String shipCity, String shipDistrict, String shipWard, double totalPrice, String customerNote, int status) {
         this.orderId = orderId;
         this.accountName = accountName;
-        this.oderDate = oderDate;
+        this.orderDate = orderDate;
         this.shipDate = shipDate;
         this.shipAddress = shipAddress;
         this.shipCity = shipCity;
-        this.shipDistric = shipDistric;
+        this.shipDistrict = shipDistrict;
         this.shipWard = shipWard;
         this.totalPrice = totalPrice;
         this.customerNote = customerNote;
-        this.satus = satus;
+        this.status = status;
+    }
+    
+    public Order(String accountName, Date orderDate, Date shipDate, String shipAddress, String shipCity, String shipDistrict, String shipWard, double totalPrice, String customerNote, int status) {
+        this.accountName = accountName;
+        this.orderDate = orderDate;
+        this.shipDate = shipDate;
+        this.shipAddress = shipAddress;
+        this.shipCity = shipCity;
+        this.shipDistrict = shipDistrict;
+        this.shipWard = shipWard;
+        this.totalPrice = totalPrice;
+        this.customerNote = customerNote;
+        this.status = status;
     }
 
     public int getOrderId() {
@@ -58,12 +71,12 @@ public class Order {
         this.accountName = accountName;
     }
 
-    public Date getOderDate() {
-        return oderDate;
+    public Date getOrderDate() {
+        return orderDate;
     }
 
-    public void setOderDate(Date oderDate) {
-        this.oderDate = oderDate;
+    public void setOrderDate(Date oderDate) {
+        this.orderDate = oderDate;
     }
 
     public Date getShipDate() {
@@ -90,12 +103,12 @@ public class Order {
         this.shipCity = shipCity;
     }
 
-    public String getShipDistric() {
-        return shipDistric;
+    public String getShipDistrict() {
+        return shipDistrict;
     }
 
-    public void setShipDistric(String shipDistric) {
-        this.shipDistric = shipDistric;
+    public void setShipDistrict(String shipDistrict) {
+        this.shipDistrict = shipDistrict;
     }
 
     public String getShipWard() {
@@ -122,14 +135,12 @@ public class Order {
         this.customerNote = customerNote;
     }
 
-    public boolean isSatus() {
-        return satus;
+    public int getStatus() {
+        return status;
     }
 
-    public void setSatus(boolean satus) {
-        this.satus = satus;
+    public void setStatus(int status) {
+        this.status = status;
     }
-
-    
 
 }

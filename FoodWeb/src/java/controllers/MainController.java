@@ -55,10 +55,13 @@ public class MainController extends HttpServlet {
                     url = "error.jsp";
                     break;
                 case "user":
-                    url = "userServlet";
+                    url = "user.jsp"; 
                     break;
                 case "signin":
                     url = "signinServlet";
+                    break;
+                case "signout":
+                    url = "signoutServlet";
                     break;
                 case "saveuser":
                     url = "signupServlet";
@@ -90,6 +93,19 @@ public class MainController extends HttpServlet {
                 case "addtocart":
                     url = "AddToCartServlet";
                     break;
+                case "saveOrder":
+                    url = "saveOrderServlet";
+                    break;
+                case "AddMealPlan":
+                    url = "AddToCustomerPlan";
+                    break;
+                case "deleteMealPlan":
+                    url = "deleteMealPlanServlet";
+                    break;
+                case "updateInfor":
+                    url = "updateInforServlet";
+                    break;
+                    
                 // ADMIN
                 case "adminindex":
                     url = "AdminServlet";
@@ -104,6 +120,7 @@ public class MainController extends HttpServlet {
                     url = "OrderManagerServlet";
                     break;
                 default:
+                    url = "error.jsp";
                     break;
             }
             request.getRequestDispatcher(url).forward(request, response);

@@ -190,6 +190,40 @@ public class AccountDAO {
         return accountList;
     }
 
+    public Account getAccountById(int accountId) throws Exception {
+        Connection conn = null;
+        try {
+            conn = DBUtil.makeConnection();
+            if (conn != null) {
+                String sql = "SELECT * FROM Accounts WHERE id = ?";
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(1, accountId);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    Account account = new Account(
+                            rs.getInt("id"),
+                            rs.getString("full_name"),
+                            rs.getString("email"),
+                            rs.getString("phone"),
+                            rs.getString("address"),
+                            rs.getInt("ward_id"),
+                            rs.getInt("district_id"),
+                            rs.getInt("city_id"),
+                            rs.getString("role"),
+                            rs.getBoolean("status")
+                    );
+                    return account;
+                }
+            }
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
+        }
+        return null;
+    }
+
+    // admin role insert
     public void addAccount(Account account) {
         Connection conn = null;
         try {

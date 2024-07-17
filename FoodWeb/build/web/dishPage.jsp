@@ -74,7 +74,7 @@
                             <li class="nav-item text-center">
                                 <a
                                     class="nav-link fs-4 fw-bold"
-                                    href="MainController?action=user&accid=<%= acc.getId()%>"
+                                    href="MainController?action=user"
                                     role="button"
                                     aria-haspopup="true"
                                     aria-expanded="false"
@@ -209,11 +209,23 @@
                             <p class="card-text fw-bold"><%= status%></p>
                             <div class="row">
                                 <div class="col-2">
-                                    <a href="#">
+                                    <%
+                                        if (it.isStatus()) {
+                                    %>
+                                    <a href="MainController?action=AddMealPlan&itemid=<%= it.getId()%>">
                                         <button class="btn btn-danger w-100 h-100">
                                             <i class="fa fa-heart"></i>
                                         </button>
                                     </a>
+                                    <%    } else {
+                                    %>
+                                    <a href="MainController?action=AddMealPlan&itemid=<%= it.getId()%>">
+                                        <button class="btn btn-danger w-100 h-100" disabled>
+                                            <i class="fa fa-heart"></i>
+                                        </button>
+                                    </a>
+                                    <% }%>
+                                    
                                 </div>
                                 <div class="col-10">
                                     <%
@@ -326,11 +338,27 @@
                     <h3 class="text-start">Total: <%= total%>$</h3>
 
                     <div class="form__footer mt-3">
+                        <%
+                            if (cartSize != 0) {
+                        %>
+                        <a style="width: 100%" href="checkOutOrder.jsp">
+                            <button
+                                class="btn btn-success w-100 py-3 px-4 fs-5 fw-bold"
+                                >
+                                Pay Now
+                            </button>
+                        </a>
+                        <%
+                        } else {
+                        %>
                         <button
-                            class="btn btn-success py-3 px-4 fs-5 fw-bold"
+                            class="btn btn-success w-100 py-3 px-4 fs-5 fw-bold js-toggle-cart"
                             >
                             Pay Now
                         </button>
+                        <%
+                            }
+                        %>
                         <button
                             class="btn btn-secondary py-3 px-4 fs-5 fw-bold js-toggle-cart"
                             >

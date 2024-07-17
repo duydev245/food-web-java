@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -33,45 +34,49 @@ public class UserManagerServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession();
+        Account acc = (Account) session.getAttribute("LoginedUser");
+        if (acc != null && acc.getRole().equals("admin")) {
+            String action = request.getParameter("action");
+            AccountDAO d = new AccountDAO();
 
-        String action = request.getParameter("action");
-        AccountDAO d = new AccountDAO();
+            if ("update".equals(action)) {
+                int id = Integer.parseInt(request.getParameter("userId"));
+                String fullName = request.getParameter("userName");
+                String email = request.getParameter("userEmail");
+                String phone = request.getParameter("userPhone");
+                String address = request.getParameter("userAddress");
+                int wardId = Integer.parseInt(request.getParameter("userWardId"));
+                int districtId = Integer.parseInt(request.getParameter("userDistrictId"));
+                int cityId = Integer.parseInt(request.getParameter("userCityId"));
+                String role = request.getParameter("userRole");
+                boolean status = Boolean.parseBoolean(request.getParameter("userStatus"));
 
-        if ("update".equals(action)) {
-            int id = Integer.parseInt(request.getParameter("userId"));
-            String fullName = request.getParameter("userName");
-            String email = request.getParameter("userEmail");
-            String phone = request.getParameter("userPhone");
-            String address = request.getParameter("userAddress");
-            int wardId = Integer.parseInt(request.getParameter("userWardId"));
-            int districtId = Integer.parseInt(request.getParameter("userDistrictId"));
-            int cityId = Integer.parseInt(request.getParameter("userCityId"));
-            String role = request.getParameter("userRole");
-            boolean status = Boolean.parseBoolean(request.getParameter("userStatus"));
+                Account updatedAccount = new Account(id, fullName, email, phone, address, wardId, districtId, cityId, role, status);
+                d.updateAccount(updatedAccount);
 
-            Account updatedAccount = new Account(id, fullName, email, phone, address, wardId, districtId, cityId, role, status);
-            d.updateAccount(updatedAccount);
+            } else if ("delete".equals(action)) {
+                String id = request.getParameter("userId");
+                d.deleteAccount(id);
 
-        } else if ("delete".equals(action)) {
-            String id = request.getParameter("userId");
-            d.deleteAccount(id);
+            } else if ("block".equals(action)) {
+                String id = request.getParameter("userId");
+                boolean currentStatus = Boolean.parseBoolean(request.getParameter("userStatus"));
 
-        } else if ("block".equals(action)) {
-            String id = request.getParameter("userId");
-            boolean currentStatus = Boolean.parseBoolean(request.getParameter("userStatus"));
+                // Toggle the status (block/unblock)
+                boolean newStatus = !currentStatus;
 
-            // Toggle the status (block/unblock)
-            boolean newStatus = !currentStatus;
+                // Update account status
+                d.updateAccountStatus(id, newStatus);
+            }
 
-            // Update account status
-            d.updateAccountStatus(id, newStatus);
+            // Redirect back to the user management page
+            ArrayList<Account> list = d.getAllAccounts();
+            request.setAttribute("ListUser", list);
+            request.getRequestDispatcher("userManager.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher("403page.jsp").forward(request, response);
         }
-
-        // Redirect back to the user management page
-        ArrayList<Account> list = d.getAllAccounts();
-        request.setAttribute("ListUser", list);
-        request.getRequestDispatcher("userManager.jsp").forward(request, response);
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

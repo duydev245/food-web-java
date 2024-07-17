@@ -6,6 +6,7 @@
 package controllers;
 
 import dao.ItemDAO;
+import dto.Account;
 import dto.Item;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -33,33 +35,39 @@ public class DishManagerServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String action = request.getParameter("action");
-        ItemDAO d = new ItemDAO();
+        HttpSession session = request.getSession();
+        Account acc = (Account) session.getAttribute("LoginedUser");
+        if (acc != null && acc.getRole().equals("admin")) {
+            String action = request.getParameter("action");
+            ItemDAO d = new ItemDAO();
 
-        try {
-            switch (action) {
-                case "add":
-                    addItem(request, d);
-                    break;
-                case "delete":
-                    deleteItem(request, d);
-                    break;
-                case "updateStatus":
-                    updateItemStatus(request, d);
-                    break;
-                case "update":
-                    updateItem(request, d);
-                    break;
-                default:
-                    break;
+            try {
+                switch (action) {
+                    case "add":
+                        addItem(request, d);
+                        break;
+                    case "delete":
+                        deleteItem(request, d);
+                        break;
+                    case "updateStatus":
+                        updateItemStatus(request, d);
+                        break;
+                    case "update":
+                        updateItem(request, d);
+                        break;
+                    default:
+                        break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        ArrayList<Item> list = d.getAllItems();
-        request.setAttribute("ListDishes", list);
-        request.getRequestDispatcher("dishManager.jsp").forward(request, response);
+            ArrayList<Item> list = d.getAllItems();
+            request.setAttribute("ListDishes", list);
+            request.getRequestDispatcher("dishManager.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher("403page.jsp").forward(request, response);
+        }
     }
 
     private void addItem(HttpServletRequest request, ItemDAO d) throws Exception {

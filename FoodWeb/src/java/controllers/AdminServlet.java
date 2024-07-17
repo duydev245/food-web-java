@@ -5,12 +5,14 @@
  */
 package controllers;
 
+import dto.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -32,7 +34,13 @@ public class AdminServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            request.getRequestDispatcher("adminindex.jsp").forward(request, response);
+            HttpSession session = request.getSession();
+            Account acc = (Account) session.getAttribute("LoginedUser");
+            if (acc != null && acc.getRole().equals("admin")) {
+                request.getRequestDispatcher("adminindex.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("403page.jsp").forward(request, response);
+            }
         }
     }
 

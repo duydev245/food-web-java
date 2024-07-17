@@ -158,11 +158,22 @@ htduy --%> <%@page import="dto.Account"%>
 
                     <div class="row">
                         <div class="col-2 p-0 ps-3">
-                            <a href="#">
+                            <%
+                                if (rs.isStatus()) {
+                            %>
+                            <a href="AddToCustomerPlan?itemid=<%= rs.getId()%>">
                                 <button class="btn btn-danger w-100 h-100">
                                     <i class="fa fa-heart"></i>
                                 </button>
                             </a>
+                            <%    } else {
+                            %>
+                            <a href="AddToCustomerPlan?itemid=<%= rs.getId()%>">
+                                <button class="btn btn-danger w-100 h-100" disabled>
+                                    <i class="fa fa-heart"></i>
+                                </button>
+                            </a>
+                            <% }%>
                         </div>
                         <div class="col-10 p-0 ps-3">
                             <%
@@ -199,7 +210,7 @@ htduy --%> <%@page import="dto.Account"%>
                                     Add to Cart
                                 </button>
                             </form>
-                            <% } %>
+                            <% }%>
                         </div>
                     </div>
                 </div>
