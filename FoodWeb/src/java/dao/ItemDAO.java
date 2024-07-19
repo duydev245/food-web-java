@@ -5,11 +5,16 @@
  */
 package dao;
 
+import dto.Ingredient;
 import dto.Item;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import mylib.DBUtil;
 
 /**
@@ -17,6 +22,47 @@ import mylib.DBUtil;
  * @author htduy
  */
 public class ItemDAO {
+
+    public List<Ingredient> getIngredientsByItemid(int itemid) {
+        List<Ingredient> list = new ArrayList<>();
+        Connection cn = null;
+        try {
+            cn = DBUtil.makeConnection();
+            if (cn != null) {
+                String sql = "SELECT i.id,i.[name] as ingredient_name, i.total_quantity, i.unit, i.[status]\n"
+                        + "FROM [DBFOODWEB].[dbo].[Dishes] as d\n"
+                        + "JOIN [dbo].[Dish_Ingredients] as di on d.id = di.dish_id\n"
+                        + "JOIN [dbo].[Ingredients] as i ON di.ingredient_id = i.id \n"
+                        + "WHERE d.[id] = ? AND i.[status] = 1;";
+                PreparedStatement pst = cn.prepareStatement(sql);
+                pst.setInt(1, itemid);
+                ResultSet table = pst.executeQuery();
+                if (table != null) {
+                    while (table.next()) {
+                        int id = table.getInt("id");
+                        String name = table.getString("ingredient_name");
+                        float quantity = table.getFloat("total_quantity");
+                        String unit = table.getString("unit");
+                        boolean status = table.getBoolean("status");
+
+                        Ingredient ingredient = new Ingredient(id, name, quantity, unit, status);
+                        list.add(ingredient);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (cn != null) {
+                    cn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return list;
+    }
 
     public ArrayList<Item> getAllItems() {
         ArrayList<Item> list = new ArrayList<>();
@@ -66,13 +112,14 @@ public class ItemDAO {
             if (cn != null) {
                 String sql = "SELECT [id], [name], [price], [status], [description], [category], [calories], [image], [recipe]\n"
                         + "FROM [DBFOODWEB].[dbo].[Dishes]\n"
-                        + "WHERE [name] LIKE ?";
+                        + "WHERE LOWER([name]) LIKE ? OR LOWER([category]) LIKE ?";
                 PreparedStatement pst = cn.prepareStatement(sql);
                 pst.setString(1, "%" + findName + "%");
+                pst.setString(2, "%" + findName + "%");
                 ResultSet table = pst.executeQuery();
                 if (table != null) {
                     while (table.next()) {
-                        int itemid = table.getInt("id");
+                        int id = table.getInt("id");
                         String itemname = table.getString("name");
                         int price = table.getInt("price");
                         boolean status = table.getBoolean("status");
@@ -81,7 +128,7 @@ public class ItemDAO {
                         int calories = table.getInt("calories");
                         String image = table.getString("image");
                         String recipe = table.getString("recipe");
-                        Item it = new Item(itemid, itemname, price, status, desc, category, calories, image, recipe);
+                        Item it = new Item(id, itemname, price, status, desc, category, calories, image, recipe);
                         list.add(it);
                     }
                 }

@@ -5,9 +5,10 @@
  */
 package controllers;
 
-import dao.OrderDAO;
+import dao.ItemDAO;
+import dao.MealPlanDAO;
 import dto.Account;
-import dto.CartItem;
+import dto.Item;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author htduy
  */
-public class saveOrderServlet extends HttpServlet {
+public class AddMealPlanServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,33 +36,30 @@ public class saveOrderServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            // thong tin user login 
-            HttpSession session = request.getSession();
-            Account acc = (Account) session.getAttribute("LoginedUser");
-            if (acc != null) {
-                OrderDAO od = new OrderDAO();
-                ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("cart");
+        HttpSession session = request.getSession();
+        Account acc = (Account) session.getAttribute("LoginedUser");
 
-                String ship_address = request.getParameter("txtaddress");
-                String ship_city_id = request.getParameter("txtcity");
-                int city_id = Integer.parseInt(ship_city_id);
-                String ship_district_id = request.getParameter("txtdistrict");
-                int district_id = Integer.parseInt(ship_district_id);
-                String ship_ward_id = request.getParameter("txtward");
-                int ward_id = Integer.parseInt(ship_ward_id);
-                String note = request.getParameter("txtNote");
-
-                if (cart != null) {
-                    int result = od.saveOrder(acc.getId(), ship_address, city_id, district_id, ward_id, note, cart);
-                    //xoa gio hang
-                    session.removeAttribute("cart");
-                    request.getRequestDispatcher("MainController?action=mainindex").forward(request, response);
+        if (acc != null) {
+            MealPlanDAO mp = new MealPlanDAO();
+            try {
+                int itemId = Integer.parseInt(request.getParameter("itemid"));
+                
+                boolean isExist = mp.checkExist(acc.getId(), itemId);
+                if(!isExist){
+                    boolean isInsert = mp.insertMealPlan(acc.getId(), itemId, true);
+                    if (isInsert) {
+                        request.getRequestDispatcher("MainController?action=opendish").forward(request, response);
+                    } else {
+                        request.getRequestDispatcher("errorPage.jsp").forward(request, response);
+                    }
+                } else {
+                    request.getRequestDispatcher("MainController?action=opendish").forward(request, response);
                 }
-            } else {
-                request.getRequestDispatcher("MainController?action=welcome").forward(request, response);
+            } catch (NumberFormatException e) {
+                request.getRequestDispatcher("errorPage.jsp").forward(request, response);
             }
+        } else {
+            request.getRequestDispatcher("MainController?action=welcome").forward(request, response);
         }
     }
 

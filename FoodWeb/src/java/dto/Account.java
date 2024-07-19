@@ -40,9 +40,22 @@ public class Account {
         this.status = status;
     }
 
-    //Non-password
+    //No-password
     public Account(int id, String fullName, String email, String phone, String address, int wardId, int districtId, int cityId, String role, boolean status) {
         this.id = id;
+        this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.wardId = wardId;
+        this.districtId = districtId;
+        this.cityId = cityId;
+        this.role = role;
+        this.status = status;
+    }
+    
+    //No-password-id
+    public Account(String fullName, String email, String phone, String address, int wardId, int districtId, int cityId, String role, boolean status) {
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;

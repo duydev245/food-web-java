@@ -1,15 +1,14 @@
-package controllers;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package controllers;
 
-import dto.CustomerPlan;
+import dao.MealPlanDAO;
+import dto.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +19,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author htduy
  */
-public class deleteMealPlanServlet extends HttpServlet {
+public class delMealPlanServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,15 +34,27 @@ public class deleteMealPlanServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
-        ArrayList<CustomerPlan> mealPlan = (ArrayList<CustomerPlan>) session.getAttribute("mealPlan");
+        Account acc = (Account) session.getAttribute("LoginedUser");
 
-        if (mealPlan != null) {
-            int itemId = Integer.parseInt(request.getParameter("itemid"));
-            mealPlan.removeIf(plan -> plan.getItem().getId() == itemId);
-            session.setAttribute("mealPlan", mealPlan);
+        if (acc != null) {
+            MealPlanDAO mp = new MealPlanDAO();
+            try {
+                int itemId = Integer.parseInt(request.getParameter("itemid"));
+
+                boolean isDelete = mp.deleteMealPlan(acc.getId(), itemId);
+                if (isDelete) {
+                    request.setAttribute("message", "Delete Successful!");
+                    request.getRequestDispatcher("MainController?action=user").forward(request, response);
+                } else {
+                    request.getRequestDispatcher("errorPage.jsp").forward(request, response);
+                }
+
+            } catch (NumberFormatException e) {
+                request.getRequestDispatcher("errorPage.jsp").forward(request, response);
+            }
+        } else {
+            request.getRequestDispatcher("MainController?action=welcome").forward(request, response);
         }
-
-        response.sendRedirect("user.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

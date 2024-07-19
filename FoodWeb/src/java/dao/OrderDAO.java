@@ -27,21 +27,23 @@ public class OrderDAO {
     // Method to save order 
     public int saveOrder(int accid, String ship_address, int ship_city_id, int ship_district_id, int ship_ward_id, String note, ArrayList<CartItem> cart) {
         int result = 0;
-        // tinh tong tien trong cart
+
+        // Calculate total price from the cart
         int total = 0;
         for (CartItem item : cart) {
             total += item.getQuantity() * item.getItem().getPrice();
         }
+
         Connection cn = null;
         try {
-            cn = DBUtil.makeConnection(); //1. tao ket noi app voi server (SQL)
+            cn = DBUtil.makeConnection(); // Create connection to the server
             if (cn != null) {
                 cn.setAutoCommit(false);
-                //  chen 1 dong vao bang order
-                String sql = "INSERT INTO [dbo].[Orders]\n"
-                        + "([account_id],[order_date],[ship_date],[ship_address],[ship_city_id],[ship_district_id],[ship_ward_id],[total_price],[customer_notes],[status])\n"
-                        + "VALUES\n"
-                        + "(?,?,?,?,?,?,?,?,?,1);";
+
+                // Insert a row into the Orders table
+                String sql = "INSERT INTO [dbo].[Orders] "
+                        + "([account_id],[order_date],[ship_date],[ship_address],[ship_city_id],[ship_district_id],[ship_ward_id],[total_price],[customer_notes],[status]) "
+                        + "VALUES (?,?,?,?,?,?,?,?,?,1);";
                 PreparedStatement pst = cn.prepareStatement(sql);
 
                 Date order_date = new Date(System.currentTimeMillis());
@@ -61,30 +63,7 @@ public class OrderDAO {
                 pst.setString(9, note);
 
                 result = pst.executeUpdate();
-
-                // lay orderId vua chen trong order
-                if (result > 0) {
-                    sql = "SELECT TOP 1 [id] FROM [dbo].[Orders] order by [id] DESC";
-                    pst = cn.prepareStatement(sql);
-                    ResultSet table = pst.executeQuery();
-                    if (table != null && table.next()) {
-                        int orderid = table.getInt("[id]");
-                        // chen cac dong tu cart vao orderDetail
-                        for (CartItem item : cart) {
-                            sql = "INSERT [dbo].[OrderDetails] VALUES (?,?,?,?,?)";
-                            pst = cn.prepareStatement(sql);
-
-                            pst.setInt(1, orderid);
-                            pst.setInt(2, item.getItem().getId());
-                            pst.setString(3, item.getItem().getCategory());
-                            pst.setInt(4, item.getQuantity());
-                            pst.setInt(5, item.getItem().getPrice());
-
-                            result = pst.executeUpdate();
-                        }
-                        cn.commit();
-                    }
-                }
+                cn.commit();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -528,8 +507,8 @@ public class OrderDAO {
         }
         return wards;
     }
-    // Method to update order status by orderId
 
+    // Method to update order status by orderId
     public void updateOrderStatus(int orderId, int status) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -556,5 +535,59 @@ public class OrderDAO {
                 e.printStackTrace();
             }
         }
+    }
+
+    // Method get all order by accid
+    public List<Order> getAllOrdersByAccID(int accid) {
+        List<Order> orderList = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = DBUtil.makeConnection();
+            if (conn != null) {
+                String sql = "SELECT o.[id] as OrderID, a.full_name as AccountName, [order_date], [ship_date], [ship_address], [ship_city_id], [ship_district_id], [ship_ward_id], [total_price], [customer_notes], o.[status] "
+                        + "FROM [DBFOODWEB].[dbo].[Orders] as o "
+                        + "JOIN [dbo].[Accounts] as a ON o.account_id = a.id "
+                        + "WHERE [account_id] = ?";
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(1, accid);
+                rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    int orderId = rs.getInt("OrderID");
+                    String accountName = rs.getString("AccountName");
+                    Date orderDate = rs.getDate("order_date");
+                    Date shipDate = rs.getDate("ship_date");
+                    String shipAddress = rs.getString("ship_address");
+                    String shipCity = rs.getString("ship_city_id");
+                    String shipDistrict = rs.getString("ship_district_id");
+                    String shipWard = rs.getString("ship_ward_id");
+                    double totalPrice = rs.getDouble("total_price");
+                    String customerNote = rs.getString("customer_notes");
+                    int status = rs.getInt("status");
+
+                    // Create Order object from the retrieved data
+                    Order order = new Order(orderId, accountName, orderDate, shipDate, shipAddress, shipCity, shipDistrict, shipWard, totalPrice, customerNote, status);
+                    orderList.add(order);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return orderList;
     }
 }

@@ -6,9 +6,11 @@
 package controllers;
 
 import dao.ItemDAO;
+import dto.Ingredient;
 import dto.Item;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,15 +34,22 @@ public class viewDetailServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            String itemid = request.getParameter("itemid");
-
+        
+        String id = request.getParameter("itemid");
+        if (id != null) {
+            int itemid = Integer.parseInt(id);
             ItemDAO d = new ItemDAO();
-            Item it = d.getItemById(Integer.parseInt(itemid));
+
+            Item it = d.getItemById(itemid);
+            List<Ingredient> list = d.getIngredientsByItemid(itemid);
+
             request.setAttribute("itemDetail", it);
+            request.setAttribute("listIngredient", list);
             request.getRequestDispatcher("detailDishes.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher("MainController?action=ERROR").forward(request, response);
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

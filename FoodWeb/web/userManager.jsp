@@ -32,6 +32,31 @@
             href="https://use.fontawesome.com/releases/v6.1.1/css/all.css"
             />
         <link rel="stylesheet" href="./css/navbar.css" />
+        <style>
+            div{
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                color: #333;
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+                text-align: left;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                margin: auto;
+                margin-top: 50px;
+                margin-bottom: 50px;
+            }
+            thead{
+                text-align: center;
+                background-color: rgb(2, 72, 157);
+                color: white;
+            }
+        </style>
     </head>
     <body>
         <header>
@@ -44,24 +69,66 @@
                     <div class="collapse navbar-collapse" id="navbarColor01">
                         <ul class="navbar-nav me-auto nav1">
                             <li class="nav-item text-center">
-                                <a class="nav-link fs-4 fw-bold" href="MainController?action=orderManager" role="button" aria-haspopup="true" aria-expanded="false">Order Manager</a>
+                                <a class="nav-link fs-4 fw-bold" href="MainController?action=orderManager" role="button" aria-haspopup="true" aria-expanded="false">Order Management</a>
                             </li>
                             <li class="nav-item text-center">
-                                <a class="nav-link fs-4 fw-bold" href="MainController?action=dishManager" role="button" aria-haspopup="true" aria-expanded="false">Dishes Manager</a>
+                                <a class="nav-link fs-4 fw-bold" href="MainController?action=dishManager" role="button" aria-haspopup="true" aria-expanded="false">Dishes Management</a>
                             </li>
                             <li class="nav-item text-center">
-                                <a class="nav-link fs-4 fw-bold" href="MainController?action=userManager" role="button" aria-haspopup="true" aria-expanded="false">User Manager</a>
+                                <a class="nav-link fs-4 fw-bold" href="MainController?action=userManager" role="button" aria-haspopup="true" aria-expanded="false">User Management</a>
                             </li>
+                            <%
+                                Account account = (Account) session.getAttribute("LoginedUser");
+                                if (account != null) {
+                                    if (account.getRole().equals("admin")) {
+                            %>
+                            <li class="nav-item text-center">
+                                <a
+                                    class="nav-link fs-4 fw-bold"
+                                    href="MainController?action=adminindex"
+                                    role="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >
+                                    <i class="fa fa-user"></i>
+                                </a>
+                            </li> 
+                            <%                                }
+                            } else {
+                            %>
+                            <li class="nav-item text-center">
+                                <a
+                                    class="nav-link fs-4 fw-bold"
+                                    href="MainController?action=welcome"
+                                    role="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >
+                                    <i class="fa fa-sign-in-alt"></i>
+                                </a>
+                            </li>
+                            <%
+                                }
+                            %>
                         </ul>
                     </div>
                 </div>
             </nav>
         </header>
         <div class="container mt-4">
-            <h1 class="mb-4">User Management</h1>
-
+            <h1 class="mb-2 fw-bold">User Management</h1>
+            <!-- Search Form -->
+            <h6>Search Users:</h6>
+            <form class="row" method="get" action="UserManagerServlet">
+                <div class="form-group col-11">
+                    <input type="text" class="form-control" id="searchQuery" name="searchQuery" placeholder="Enter emai, name or phone">
+                </div>
+                <div class="col-1">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                    <input type="hidden" name="action" value="search">          
+                </div>
+            </form>
             <!-- Display Users -->
-            <h2>Manage Users</h2>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -103,7 +170,7 @@
                                     <%= acc.isStatus() ? "Block" : "Unblock"%>
                                 </button>
                             </form>
-                            <button type="button" class="btn btn-primary btn-sm" onclick="editUser('<%= acc.getId()%>', '<%= acc.getFullName()%>', '<%= acc.getEmail()%>', '<%= acc.getPhone()%>', '<%= acc.getAddress()%>', <%= acc.getWardId()%>, <%= acc.getDistrictId()%>, <%= acc.getCityId()%>, '<%= acc.getRole()%>', <%= acc.isStatus()%>)">Edit</button>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="editUser('<%= acc.getId()%>', '<%= acc.getFullName()%>', '<%= acc.getEmail()%>', '<%= acc.getPhone()%>', '<%= acc.getAddress()%>', <%= acc.getWardId()%>, <%= acc.getDistrictId()%>, <%= acc.getCityId()%>, '<%= acc.getRole()%>', <%= acc.isStatus()%>)">Detail</button>
                         </td>
                     </tr>
                     <%
@@ -118,55 +185,55 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            <h5 class="modal-title" id="editUserModalLabel">Detail User</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <form method="get" action="UserManagerServlet">
                                 <input type="hidden" id="editUserId" name="userId">
                                 <div class="form-group">
                                     <label for="editUserName">Full Name:</label>
-                                    <input type="text" class="form-control" id="editUserName" name="userName" required>
+                                    <input disabled="" type="text" class="form-control" id="editUserName" name="userName" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="editUserEmail">Email:</label>
-                                    <input type="email" class="form-control" id="editUserEmail" name="userEmail" required>
+                                    <input disabled="" type="email" class="form-control" id="editUserEmail" name="userEmail" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="editUserPhone">Phone:</label>
-                                    <input type="text" class="form-control" id="editUserPhone" name="userPhone" required>
+                                    <input disabled="" type="text" class="form-control" id="editUserPhone" name="userPhone" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="editUserAddress">Address:</label>
-                                    <input type="text" class="form-control" id="editUserAddress" name="userAddress" required>
+                                    <input disabled="" type="text" class="form-control" id="editUserAddress" name="userAddress" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="editUserWardId">Ward ID:</label>
-                                    <input type="number" class="form-control" id="editUserWardId" name="userWardId" required>
+                                    <input disabled="" type="number" class="form-control" id="editUserWardId" name="userWardId" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="editUserDistrictId">District ID:</label>
-                                    <input type="number" class="form-control" id="editUserDistrictId" name="userDistrictId" required>
+                                    <input disabled="" type="number" class="form-control" id="editUserDistrictId" name="userDistrictId" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="editUserCityId">City ID:</label>
-                                    <input type="number" class="form-control" id="editUserCityId" name="userCityId" required>
+                                    <input disabled="" type="number" class="form-control" id="editUserCityId" name="userCityId" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="editUserRole">Role:</label>
-                                    <input type="text" class="form-control" id="editUserRole" name="userRole" required>
+                                    <input disabled="" type="text" class="form-control" id="editUserRole" name="userRole" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="editUserStatus">Status:</label>
-                                    <select class="form-control" id="editUserStatus" name="userStatus">
+                                    <select disabled="" class="form-control" id="editUserStatus" name="userStatus">
                                         <option value="true">Active</option>
                                         <option value="false">Inactive</option>
                                     </select>
                                 </div>
-                                <button type="submit" name="action" value="update" class="btn btn-primary">Update User</button>
                             </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">DONE</button>
                         </div>
                     </div>
                 </div>

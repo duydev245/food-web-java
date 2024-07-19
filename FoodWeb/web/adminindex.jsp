@@ -4,6 +4,7 @@
     Author     : htduy
 --%>
 
+<%@page import="dto.Account"%>
 <%@page import="dto.Item"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -33,6 +34,22 @@
             href="https://use.fontawesome.com/releases/v6.1.1/css/all.css"
             />
         <link rel="stylesheet" href="./css/navbar.css" />
+        <style>
+            .todo-container {
+                margin-top: 20px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                margin: auto;
+                margin-top: 50px;
+                padding: 10px;
+                margin-bottom: 50px;
+            }
+            .todo-item {
+                margin-bottom: 10px;
+            }
+            .todo-item input[type="checkbox"] {
+                margin-right: 10px;
+            }
+        </style>
     </head>
     <body>
         <header>
@@ -45,14 +62,47 @@
                     <div class="collapse navbar-collapse" id="navbarColor01">
                         <ul class="navbar-nav me-auto nav1">
                             <li class="nav-item text-center">
-                                <a class="nav-link fs-4 fw-bold" href="MainController?action=orderManager" role="button" aria-haspopup="true" aria-expanded="false">Order Manager</a>
+                                <a class="nav-link fs-4 fw-bold" href="MainController?action=orderManager" role="button" aria-haspopup="true" aria-expanded="false">Order Management</a>
                             </li>
                             <li class="nav-item text-center">
-                                <a class="nav-link fs-4 fw-bold" href="MainController?action=dishManager" role="button" aria-haspopup="true" aria-expanded="false">Dishes Manager</a>
+                                <a class="nav-link fs-4 fw-bold" href="MainController?action=dishManager" role="button" aria-haspopup="true" aria-expanded="false">Dishes Management</a>
                             </li>
                             <li class="nav-item text-center">
-                                <a class="nav-link fs-4 fw-bold" href="MainController?action=userManager" role="button" aria-haspopup="true" aria-expanded="false">User Manager</a>
+                                <a class="nav-link fs-4 fw-bold" href="MainController?action=userManager" role="button" aria-haspopup="true" aria-expanded="false">User Management</a>
                             </li>
+                            <%
+                                Account acc = (Account) session.getAttribute("LoginedUser");
+                                if (acc != null) {
+                                    if (acc.getRole().equals("admin")) {
+                            %>
+                            <li class="nav-item text-center">
+                                <a
+                                    class="nav-link fs-4 fw-bold"
+                                    href="MainController?action=adminindex"
+                                    role="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >
+                                    <i class="fa fa-user"></i>
+                                </a>
+                            </li> 
+                            <%                                }
+                            } else {
+                            %>
+                            <li class="nav-item text-center">
+                                <a
+                                    class="nav-link fs-4 fw-bold"
+                                    href="MainController?action=welcome"
+                                    role="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >
+                                    <i class="fa fa-sign-in-alt"></i>
+                                </a>
+                            </li>
+                            <%
+                                }
+                            %>
                         </ul>
                     </div>
                 </div>
@@ -61,9 +111,9 @@
 
         <div class="container mt-3">
             <h1 class="text-start">Welcome back ${LoginedUser.getFullName()}!</h1>
-
+            <div style="font-size: 20px" id="current-time"></div>
             <a href="MainController?action=signout">
-                <button class="btn btn-danger">
+                <button class="btn btn-danger mt-2">
                     Log Out
                 </button>
             </a>
@@ -83,5 +133,17 @@
         ></script>
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="//cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+        <script>
+            function updateTime() {
+                var curDate = new Date();
+                var curTime = curDate.toLocaleTimeString();
+                var curDay = curDate.getDate();
+                var curMonth = curDate.getMonth() + 1;
+                var curYear = curDate.getFullYear();
+                document.getElementById('current-time').innerHTML = "Time: " + curTime + " Date: " + curDay + "/" + curMonth + "/" + curYear;
+            }
+            setInterval(updateTime, 1000);
+            updateTime(); // Initial call to display time immediately on page load          
+        </script>
     </body>
 </html>

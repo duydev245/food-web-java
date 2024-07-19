@@ -42,20 +42,19 @@ public class MainController extends HttpServlet {
 
             // switch action ra tung case
             switch (act) {
+                // Main Index
+                case "mainindex":
+                    url = "index.jsp";
+                    break;
+                case "ERROR":
+                    url = "error.jsp";
+                    break;
+                // Sign In/Up/Out
                 case "welcome":
                     url = "signin.jsp";
                     break;
                 case "register":
                     url = "registerForm.jsp";
-                    break;               
-                case "mainindex":
-                    url = "index.jsp";
-                    break;              
-                case "ERROR":
-                    url = "error.jsp";
-                    break;
-                case "user":
-                    url = "user.jsp"; 
                     break;
                 case "signin":
                     url = "signinServlet";
@@ -63,20 +62,19 @@ public class MainController extends HttpServlet {
                 case "signout":
                     url = "signoutServlet";
                     break;
+                //USER FEATURES
                 case "saveuser":
                     url = "signupServlet";
                     break;
+                case "user":
+                    url = "userPageServlet"; //user.jsp userPageServlet
+                    break;
+                case "updateInfor":
+                    url = "updateInforServlet";
+                    break;
+                // DISHes & DRINKs
                 case "opendish":
                     url = "getItemsServlet";
-                    break;
-                case "openmenu":
-                    url = "getMenusServlet";
-                    break;
-                case "detailMenu":
-                    url = "viewDetailMenuServlet";
-                    break;
-                case "filterMenus":
-                    url = "filterMenusServlet";
                     break;
                 case "searchDishes":
                     url = "searchItemsServlet";
@@ -87,26 +85,37 @@ public class MainController extends HttpServlet {
                 case "detailDishes":
                     url = "viewDetailServlet";
                     break;
+                // MENUs
+                case "openmenu":
+                    url = "getMenusServlet";
+                    break;
+                case "detailMenu":
+                    url = "viewDetailMenuServlet";
+                    break;
+                case "filterMenus":
+                    url = "filterMenusServlet";
+                    break;
                 case "searchMenu":
                     url = "searchMenuServlet";
                     break;
+                // CART & ORDER
                 case "addtocart":
                     url = "AddToCartServlet";
                     break;
                 case "saveOrder":
                     url = "saveOrderServlet";
                     break;
+                case "updateOrder":
+                    url = "UpdateOrderStatusServlet";
+                    break;
+                // MEAL PLAN
                 case "AddMealPlan":
-                    url = "AddToCustomerPlan";
+                    url = "AddMealPlanServlet";
                     break;
                 case "deleteMealPlan":
-                    url = "deleteMealPlanServlet";
+                    url = "delMealPlanServlet";
                     break;
-                case "updateInfor":
-                    url = "updateInforServlet";
-                    break;
-                    
-                // ADMIN
+                // ADMIN FEATURES
                 case "adminindex":
                     url = "AdminServlet";
                     break;

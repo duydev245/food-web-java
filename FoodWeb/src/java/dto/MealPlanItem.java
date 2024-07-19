@@ -9,32 +9,19 @@ package dto;
  *
  * @author htduy
  */
-public class CustomerPlan {
+public class MealPlanItem {
 
-    private int id;
     private int accid;
     private Item item;
+    private boolean status;
 
-    public CustomerPlan() {
+    public MealPlanItem() {
     }
 
-    public CustomerPlan(int id, int accid, Item item) {
-        this.id = id;
+    public MealPlanItem(int accid, Item item, boolean status) {
         this.accid = accid;
         this.item = item;
-    }
-
-    public CustomerPlan(int accid, Item item) {
-        this.accid = accid;
-        this.item = item;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        this.status = status;
     }
 
     public int getAccid() {
@@ -53,4 +40,13 @@ public class CustomerPlan {
         this.item = item;
     }
 
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+    
+    
 }

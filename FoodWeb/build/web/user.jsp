@@ -4,9 +4,12 @@
     Author     : htduy
 --%>
 
+<%@page import="java.util.Collections"%>
+<%@page import="dto.Order"%>
+<%@page import="java.util.List"%>
+<%@page import="dto.MealPlanItem"%>
 <%@page import="dto.Item"%>
 <%@page import="dto.Account"%>
-<%@page import="dto.CustomerPlan"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -35,6 +38,27 @@
             />
 
         <link rel="stylesheet" href="./css/styleDetail.css" />
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                color: #333;
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+                text-align: left;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                margin: auto;
+                margin-top: 50px;
+                margin-bottom: 50px;
+            }
+            thead{
+                text-align: center;
+                background-color: rgb(2, 72, 157);
+                color: white;
+            }
+        </style>
     </head>
     <body>
         <header>
@@ -88,14 +112,13 @@
             </nav>
         </header>
         <%
-            ArrayList<CustomerPlan> mealPlan = (ArrayList<CustomerPlan>) session.getAttribute("mealPlan");
             Account acc = (Account) session.getAttribute("LoginedUser");
             String msg = (String) request.getAttribute("message");
             String color = (String) request.getAttribute("color");
         %>
-        <h1 class="mt-2 text-center text-primary">Welcome <%= acc.getFullName()%>!</h1>
 
-        <div class="container">
+        <div class="container my-5">
+            <h1 class="text-center text-primary">Welcome <%= acc.getFullName()%>!</h1>
             <div id="user-infor">
                 <h5>Your Information:</h5>
                 <form action="MainController" method="post">
@@ -209,6 +232,92 @@
                     <p><%= msg != null ? msg : ""%></p>
                 </div>
             </div>
+            <%
+                List<Order> orderList = (List<Order>) request.getAttribute("orderList");
+                if (orderList != null) {
+                    Collections.reverse(orderList);
+                }
+            %>  
+            <div id="Order-history" class="mb-5">
+                <h5>Your Order History:</h5>
+                <table class="table table-striped my-1 text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th scope="col">Order ID</th>
+                            <th scope="col">Order Date</th>
+                            <th scope="col">Ship Date</th>
+                            <th scope="col">Total Price</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%
+                            if (orderList != null && !orderList.isEmpty()) {
+                                int index = 1;
+                                String statusOrder = "";
+                                for (Order od : orderList) {
+                                    if (od.getStatus() == 1) {
+                                        statusOrder = "<span class='fw-bold'>Pending</span>";
+                                    } else if (od.getStatus() == 2) {
+                                        statusOrder = "<span class='text-primary fw-bold'>Delivery</span>";
+                                    } else if (od.getStatus() == 3) {
+                                        statusOrder = "<span class='text-success fw-bold'>Completed</span>";
+                                    }
+                        %>
+                        <tr>
+                            <th scope="row"><%= index++%></th>
+                            <td><%= od.getOrderId()%></td>
+                            <td><%= od.getOrderDate()%></td>
+                            <td><%= od.getShipDate()%></td>
+                            <td><%= od.getTotalPrice()%>$</td>
+                            <td><%= statusOrder%></td>
+                            <td>
+                                <%
+                                    if (od.getStatus() == 3) {
+                                %>
+                                <form action="" method="POST">
+                                    <input type="hidden" name="orderId" value="<%= od.getOrderId()%>" />
+                                    <button disabled="" type="submit" value="" name="action" class="btn btn-success">Completed</button>
+                                </form>
+                                <%
+                                } else if (od.getStatus() == 2) {
+                                %>
+                                <form action="MainController" method="POST">
+                                    <input type="hidden" name="orderId" value="<%= od.getOrderId()%>" />
+                                    <button type="submit" value="updateOrder" name="action" class="btn btn-warning">Delivery Yet?</button>
+                                </form>
+                                <%
+                                } else if (od.getStatus() == 1) {
+                                %>
+                                <form action="" method="POST">
+                                    <input type="hidden" name="orderId" value="<%= od.getOrderId()%>" />
+                                    <button disabled="" type="submit" value="" name="action" class="btn btn-warning">Delivery Yet?</button>
+                                </form>
+                                <%
+                                    }
+                                %>
+
+                            </td>
+                        </tr>
+                        <%
+                            }
+                        } else {
+                        %>
+                        <tr>
+                            <td colspan="7">No orders found.</td>
+                        </tr>
+                        <%
+                            }
+                        %>
+                    </tbody>
+                </table>
+            </div>
+
+            <%
+                List<MealPlanItem> mealPlan = (List<MealPlanItem>) request.getAttribute("mealPlan");
+            %>
             <div id="Meal-plan">
                 <h5>Your Customer Plan:</h5>
                 <table class="table table-striped my-1 text-center">
@@ -218,27 +327,33 @@
                             <th scope="col">Name</th>
                             <th scope="col">Image</th>
                             <th scope="col">Price</th>
+                            <th scope="col">Dish Status</th>
                             <th scope="col">Delete</th>
                         </tr>
                     </thead>
                     <tbody>
                         <%
-                            if (mealPlan != null && !mealPlan.isEmpty()) {
+                            if (mealPlan
+                                    != null && !mealPlan.isEmpty()) {
                                 int count = 0;
-                                for (CustomerPlan plan : mealPlan) {
+                                String status = "";
+                                for (MealPlanItem plan : mealPlan) {
                                     Item item = plan.getItem();
+                                    status = item.isStatus() ? "<span class='text-success'>Available</span>" : "<span class='text-danger'>Out of order</span>";
+
                         %>
                         <tr>
                             <th scope="row"><%= ++count%></th>
-                            <td>
+                            <td class="text-start">
                                 <a href="MainController?action=detailDishes&itemid=<%= item.getId()%>">
                                     <%= item.getName()%>
                                 </a>
                             </td>
-                            <td style="width: 20%"><img src="<%= item.getImage1()%>" class="w-100"/></td>
+                            <td style="width: 20%"><img src="<%=item.getImage1()%>" class="w-100"/></td>
                             <td><%= item.getPrice()%>$</td>
+                            <td><%= status%></td>
                             <td>
-                                <a href="MainController?action=deleteMealPlan&itemid=<%= item.getId()%>">
+                                <a href="MainController?action=deleteMealPlan&itemid=<%=item.getId()%>">
                                     <button class="btn btn-danger">X</button>
                                 </a>
                             </td>
@@ -248,15 +363,93 @@
                         } else {
                         %>
                         <tr>
-                            <td colspan="5">No items in the plan</td>
+                            <td colspan="6">No items in the plan</td>
                         </tr>
                         <%
                             }
                         %>
                     </tbody>
-                </table>              
+                </table>
+                <div class="text-end mt-3">
+                    <%
+                        String message = (String) request.getAttribute("message");
+                    %>
+                    <div class="fw-bold">
+                        <span class="text-success"><%= message != null ? message : ""%></span>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <!-- Footer -->
+        <footer
+            id="footer"
+            class="text-center text-lg-start text-light gradient-custom"
+            >
+            <section class="p-4">
+                <div class="container mt-5">
+                    <div class="row mt-3">
+                        <div class="col-lg-4 mb-4">
+                            <h6 class="text-uppercase fw-bold mb-4">
+                                <i class="fa fa-utensils"></i>
+                                Do Food - Delicious Food
+                            </h6>
+                            <hr />
+                            <p style="width: 80%">
+                                We pride ourselves on efficiency, hard work, and delivering the
+                                best quality products and ingredients at the best value. Your
+                                satisfaction is our top priority.
+                            </p>
+                        </div>
+
+                        <div class="col-lg-4 mb-4">
+                            <h6 class="text-uppercase fw-bold mb-4">Our networks</h6>
+                            <hr />
+                            <p>
+                                <a href="#!" class="text-reset">Facebook</a>
+                            </p>
+                            <p>
+                                <a href="#!" class="text-reset">Instagram</a>
+                            </p>
+                            <p>
+                                <a href="#!" class="text-reset">Twitter</a>
+                            </p>
+                            <p>
+                                <a href="#!" class="text-reset">Google</a>
+                            </p>
+                        </div>
+
+                        <div class="col-lg-4 mb-4">
+                            <h6 class="text-uppercase fw-bold mb-4">Contact Us</h6>
+                            <hr />
+                            <p>
+                                <i class="fas fa-home me-3"></i> Ho Chi Minh, Dictrict 9, Viet
+                                Nam
+                            </p>
+                            <p>
+                                <i class="fas fa-envelope me-3"></i>
+                                dofoodmail.work@mail.com
+                            </p>
+                            <p><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>
+                            <p><i class="fas fa-print me-3"></i> + 01 234 567 89</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div
+                class="text-center p-4"
+                style="background-color: rgba(0, 0, 0, 0.05)"
+                >
+                &copy; May 2024
+                <a class="text-reset fw-bold" href="#">Do Food Store</a>
+            </div>
+        </footer>
+
+        <!-- Back to top button -->
+        <button onclick="topFunction()" id="myBtn">
+            <i class="fa fa-angle-up"></i>
+        </button>
 
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"
@@ -272,5 +465,31 @@
         ></script>
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="//cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+        <script>
+            // back to top
+            let mybutton = document.getElementById("myBtn");
+
+            // When the user scrolls down 20px from the top of the document, show the button
+            window.onscroll = function () {
+                scrollFunction();
+            };
+
+            function scrollFunction() {
+                if (
+                        document.body.scrollTop > 20 ||
+                        document.documentElement.scrollTop > 20
+                        ) {
+                    mybutton.style.display = "block";
+                } else {
+                    mybutton.style.display = "none";
+                }
+            }
+
+            // When the user clicks on the button, scroll to the top of the document
+            function topFunction() {
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            }
+        </script>
     </body>
 </html>

@@ -4,6 +4,7 @@
     Author     : Tan Phat
 --%>
 
+<%@page import="dto.Account"%>
 <%@page import="dto.Item"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -33,6 +34,31 @@
             href="https://use.fontawesome.com/releases/v6.1.1/css/all.css"
             />
         <link rel="stylesheet" href="./css/navbar.css" />
+        <style>
+            div{
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                color: #333;
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+                text-align: left;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                margin: auto;
+                margin-top: 50px;
+                margin-bottom: 50px;
+            }
+            thead{
+                text-align: center;
+                background-color: rgb(2, 72, 157);
+                color: white;
+            }
+        </style>
     </head>
     <body>
         <header>
@@ -45,23 +71,69 @@
                     <div class="collapse navbar-collapse" id="navbarColor01">
                         <ul class="navbar-nav me-auto nav1">
                             <li class="nav-item text-center">
-                                <a class="nav-link fs-4 fw-bold" href="MainController?action=orderManager" role="button" aria-haspopup="true" aria-expanded="false">Order Manager</a>
+                                <a class="nav-link fs-4 fw-bold" href="MainController?action=orderManager" role="button" aria-haspopup="true" aria-expanded="false">Order Management</a>
                             </li>
                             <li class="nav-item text-center">
-                                <a class="nav-link fs-4 fw-bold" href="MainController?action=dishManager" role="button" aria-haspopup="true" aria-expanded="false">Dishes Manager</a>
+                                <a class="nav-link fs-4 fw-bold" href="MainController?action=dishManager" role="button" aria-haspopup="true" aria-expanded="false">Dishes Management</a>
                             </li>
                             <li class="nav-item text-center">
-                                <a class="nav-link fs-4 fw-bold" href="MainController?action=userManager" role="button" aria-haspopup="true" aria-expanded="false">User Manager</a>
+                                <a class="nav-link fs-4 fw-bold" href="MainController?action=userManager" role="button" aria-haspopup="true" aria-expanded="false">User Management</a>
                             </li>
+                            <%
+                                Account acc = (Account) session.getAttribute("LoginedUser");
+                                if (acc != null) {
+                                    if (acc.getRole().equals("admin")) {
+                            %>
+                            <li class="nav-item text-center">
+                                <a
+                                    class="nav-link fs-4 fw-bold"
+                                    href="MainController?action=adminindex"
+                                    role="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >
+                                    <i class="fa fa-user"></i>
+                                </a>
+                            </li> 
+                            <%                                }
+                            } else {
+                            %>
+                            <li class="nav-item text-center">
+                                <a
+                                    class="nav-link fs-4 fw-bold"
+                                    href="MainController?action=welcome"
+                                    role="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >
+                                    <i class="fa fa-sign-in-alt"></i>
+                                </a>
+                            </li>
+                            <%
+                                }
+                            %>
                         </ul>
                     </div>
                 </div>
             </nav>
         </header>
         <div class="container mt-4">
+            <h1 class="fw-bold">Dish Management</h1>
+
+            <!-- Search Form -->
+            <form class="row" method="get" action="DishManagerServlet">
+                <div class="form-group col-11">
+                    <label for="searchQuery">Search Dishes:</label>
+                    <input type="text" class="form-control" id="searchQuery" name="searchQuery" placeholder="Enter dish name or category">
+                </div>
+                <div class="col-1">
+                    <button type="submit" class="btn btn-primary mt-4">Search</button>
+                    <input type="hidden" name="action" value="search">          
+                </div>
+            </form>
+
             <!-- Display Orders -->
-            <h2>Menu Management</h2>
-            <button type="button" class="btn btn-success mb-4" data-toggle="modal" data-target="#addItemModal">Add New Item</button>
+            <button type="button" class="btn btn-success mt-4" data-bs-toggle="modal" data-bs-target="#addItemModal">Add New Item</button>
 
             <table class="table table-striped">
                 <thead>
@@ -69,7 +141,7 @@
                         <th>ID</th>
                         <th>Image</th>
                         <th>Dish Name</th>
-                        <th>Dish Price</th>
+                        <th>Price</th>
                         <th>Status</th>
                         <th>Description</th>
                         <th>Category</th>
@@ -86,7 +158,7 @@
                     %>
                     <tr>
                         <td><%= it.getId()%></td>
-                        <td><img src="<%= it.getImage1()%>" alt="Dish Image" width="120" height="100"></td>
+                        <td><img src="<%= it.getImage1()%>" alt="Dish Image" width="139" height="93"></td>
                         <td><%= it.getName()%></td>
                         <td>$<%= it.getPrice()%></td>
                         <td><%= it.isStatus() ? "Available" : "Unavailable"%></td>
@@ -97,16 +169,16 @@
                         <td>
                             <form method="post" action="DishManagerServlet?action=delete" style="display:inline-block;">
                                 <input type="hidden" name="itemId" value="<%= it.getId()%>">
-                                <button type="submit" class="btn btn-danger btn-sm mb-2">Delete</button>
+                                <button type="submit" class="btn btn-danger btn-sm mb-2 w-auto">Delete</button>
                             </form>
                             <form method="post" action="DishManagerServlet?action=updateStatus" style="display:inline-block;">
                                 <input type="hidden" name="itemId" value="<%= it.getId()%>">
-                                <button type="submit" class="btn btn-warning btn-sm mb-2">Update Status</button>
+                                <button type="submit" class="btn btn-warning btn-sm mb-2 w-100">Update Status</button>
                             </form>
                             <button type="button" 
                                     class="btn btn-primary btn-sm" 
-                                    data-toggle="modal" 
-                                    data-target="#editItemModal"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#editItemModal"
                                     data-id="<%= it.getId()%>"
                                     data-name="<%= it.getName().replace("'", "&apos;")%>"
                                     data-description="<%= it.getDesc().replace("'", "&apos;")%>"
@@ -117,9 +189,7 @@
                                     data-image="<%= it.getImage1()%>"
                                     data-recipe="<%= it.getRecipe().replace("'", "&apos;").replace("\n", "\\n").replace("\r", "\\r")%>"
                                     onclick="editItem(this)">Edit</button>
-
                         </td>
-
                     </tr>
                     <%
                             }
@@ -129,14 +199,12 @@
             </table>
 
             <!-- Add New Menu Item Modal -->
-            <div class="modal fade" id="addItemModal" tabindex="-1" role="dialog" aria-labelledby="addItemModalLabel" aria-hidden="true">
+            <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="addItemModalLabel">Add New Menu Item</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <form method="post" action="DishManagerServlet?action=add">
@@ -183,14 +251,12 @@
             </div>
 
             <!-- Edit Menu Item Modal -->
-            <div class="modal fade" id="editItemModal" tabindex="-1" role="dialog" aria-labelledby="editItemModalLabel" aria-hidden="true">
+            <div class="modal fade" id="editItemModal" tabindex="-1" aria-labelledby="editItemModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="editItemModalLabel">Edit Menu Item</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <form method="post" action="DishManagerServlet?action=update">
@@ -275,8 +341,6 @@
                                             document.getElementById('editItemRecipe').value = recipe;
                                         }
         </script>
-
-
     </body>
 </html>
 

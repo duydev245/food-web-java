@@ -1,5 +1,7 @@
 <%-- Document : detailDishes Created on : Jul 10, 2024, 9:51:17 AM Author :
-htduy --%> <%@page import="dto.Account"%>
+htduy --%> <%@page import="dto.Ingredient"%>
+<%@page import="java.util.List"%>
+<%@page import="dto.Account"%>
 <%@page import="dto.Item"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="dto.CartItem"%>
@@ -30,6 +32,27 @@ htduy --%> <%@page import="dto.Account"%>
             />
 
         <link rel="stylesheet" href="./css/styleDetail.css" />
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                color: #333;
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+                text-align: left;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                margin: auto;
+                margin-top: 50px;
+                margin-bottom: 50px;
+            }
+            thead{
+                text-align: center;
+                background-color: rgb(2, 72, 157);
+                color: white;
+            }
+        </style>
     </head>
 
     <body>
@@ -109,6 +132,7 @@ htduy --%> <%@page import="dto.Account"%>
         <div class="container mt-5 mb-5">
             <%
                 Item rs = (Item) request.getAttribute("itemDetail");
+                List<Ingredient> list = (List<Ingredient>) request.getAttribute("listIngredient");
                 String status = rs.isStatus() ? "<h5 class='text-success'>Available</h5>" : "<h5 class='text-danger'>Out of order</h5>";
             %>
             <div class="row">
@@ -116,11 +140,38 @@ htduy --%> <%@page import="dto.Account"%>
                     <%= rs.getName()%>
                 </h2>
                 <div class="col-8 p-2">
-                    <img
-                        class="w-100 h-100 rounded"
-                        src="<%= rs.getImage1()%>"
-                        alt=""
-                        />
+                    <div>
+                        <img
+                            class="w-100 h-100 rounded"
+                            src="<%= rs.getImage1()%>"
+                            alt=""
+                            />
+                    </div>
+                    <hr />
+                    <div>
+                        <h3 class="text-center">Ingredients Per Serving</h3>
+                        <table class="table table-striped my-1 text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">No</th>
+                                    <th scope="col">Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <%
+                                    int index = 1;
+                                    for (Ingredient ing : list) {
+                                %>
+                                <tr>
+                                    <td><%= index++%></td>
+                                    <td><%= ing.getName()%></td>
+                                </tr>
+                                <%
+                                    }
+                                %>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="col-4">
                     <div>
@@ -161,14 +212,14 @@ htduy --%> <%@page import="dto.Account"%>
                             <%
                                 if (rs.isStatus()) {
                             %>
-                            <a href="AddToCustomerPlan?itemid=<%= rs.getId()%>">
+                            <a href="MainController?action=AddMealPlan&itemid=<%= rs.getId()%>">
                                 <button class="btn btn-danger w-100 h-100">
                                     <i class="fa fa-heart"></i>
                                 </button>
                             </a>
                             <%    } else {
                             %>
-                            <a href="AddToCustomerPlan?itemid=<%= rs.getId()%>">
+                            <a href="MainController?action=AddMealPlan&itemid=<%= rs.getId()%>">
                                 <button class="btn btn-danger w-100 h-100" disabled>
                                     <i class="fa fa-heart"></i>
                                 </button>

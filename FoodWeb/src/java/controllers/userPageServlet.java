@@ -5,13 +5,15 @@
  */
 package controllers;
 
-import dao.ItemDAO;
+import dao.MealPlanDAO;
+import dao.OrderDAO;
 import dto.Account;
-import dto.CustomerPlan;
-import dto.Item;
+import dto.MealPlanItem;
+import dto.Order;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +24,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author htduy
  */
-public class AddToCustomerPlan extends HttpServlet {
+public class userPageServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,45 +40,20 @@ public class AddToCustomerPlan extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         Account acc = (Account) session.getAttribute("LoginedUser");
-
         if (acc != null) {
-            try {
-                int itemId = Integer.parseInt(request.getParameter("itemid"));
-                ItemDAO itemDAO = new ItemDAO();
-                Item item = itemDAO.getItemById(itemId);
-
-                if (item != null) {
-                    ArrayList<CustomerPlan> mealPlan = (ArrayList<CustomerPlan>) session.getAttribute("mealPlan");
-                    if (mealPlan == null) {
-                        mealPlan = new ArrayList<>();
-                    }
-
-                    boolean itemExists = false;
-                    for (CustomerPlan plan : mealPlan) {
-                        if (plan.getItem().getId() == itemId) {
-                            itemExists = true;
-                            break;
-                        }
-                    }
-
-                    if (!itemExists) {
-                        mealPlan.add(new CustomerPlan(acc.getId(), item));
-                        session.setAttribute("mealPlan", mealPlan);
-                    }
-
-                    request.getRequestDispatcher("MainController?action=opendish").forward(request, response);
-
-                } else {
-                    request.setAttribute("errorMessage", "Item not found.");
-                    request.getRequestDispatcher("errorPage.jsp").forward(request, response);
-                }
-            } catch (NumberFormatException e) {
-                request.setAttribute("errorMessage", "Invalid item ID.");
-                request.getRequestDispatcher("errorPage.jsp").forward(request, response);
-            }
+            MealPlanDAO mp = new MealPlanDAO();
+            OrderDAO od = new OrderDAO();
+            
+            List<MealPlanItem> list = mp.getMealPlanByAccId(acc.getId());
+            List<Order> orderList = od.getAllOrdersByAccID(acc.getId());
+            
+            request.setAttribute("mealPlan", list);
+            request.setAttribute("orderList", orderList);
+            request.getRequestDispatcher("user.jsp").forward(request, response);
         } else {
             request.getRequestDispatcher("MainController?action=welcome").forward(request, response);
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

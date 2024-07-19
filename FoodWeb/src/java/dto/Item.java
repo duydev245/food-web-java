@@ -28,6 +28,16 @@ public class Item {
     public Item() {
     }
 
+    // meal plan
+    public Item(int id, String name, int price, boolean status, String category, String image1) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.status = status;
+        this.category = category;
+        this.image1 = image1;
+    }
+    
     // dishes and drinks
     public Item(int id, String name, int price, boolean status, String desc, String category, int calories, String image1, String recipe) {
         this.id = id;

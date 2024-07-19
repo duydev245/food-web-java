@@ -112,6 +112,22 @@
         <servlet-name>userDetailServlet</servlet-name>
         <servlet-class>controllers.userDetailServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddMealPlanServlet</servlet-name>
+        <servlet-class>controllers.AddMealPlanServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>userPageServlet</servlet-name>
+        <servlet-class>controllers.userPageServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>delMealPlanServlet</servlet-name>
+        <servlet-class>controllers.delMealPlanServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateOrderStatusServlet</servlet-name>
+        <servlet-class>controllers.UpdateOrderStatusServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>MainController</servlet-name>
         <url-pattern>/MainController</url-pattern>
@@ -212,9 +228,25 @@
         <servlet-name>userDetailServlet</servlet-name>
         <url-pattern>/userDetailServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddMealPlanServlet</servlet-name>
+        <url-pattern>/AddMealPlanServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>userPageServlet</servlet-name>
+        <url-pattern>/userPageServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>delMealPlanServlet</servlet-name>
+        <url-pattern>/delMealPlanServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateOrderStatusServlet</servlet-name>
+        <url-pattern>/UpdateOrderStatusServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
-            30
+            60
         </session-timeout>
     </session-config>
     <welcome-file-list>

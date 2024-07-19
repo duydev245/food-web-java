@@ -34,6 +34,28 @@
             />
 
         <link rel="stylesheet" href="./css/styleDish.css" />
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                color: #333;
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+                text-align: left;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                margin: auto;
+                margin-top: 50px;
+                margin-bottom: 50px;
+                text-align: center;
+            }
+            thead{
+                text-align: center;
+                background-color: rgb(2, 72, 157);
+                color: white;
+            }
+        </style>
     </head>
     <%
         ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("cart");
@@ -154,6 +176,7 @@
                             class="form-control"
                             id="floatingInput"
                             placeholder="address"
+                            required=""
                             />
                         <label for="floatingInput">Address</label>
                     </div>
@@ -162,6 +185,7 @@
                         <select
                             class="form-select"
                             name="txtward"
+                            required=""
                             >
                             <option>Ward</option>
                             <option value="1">Ward 1</option>
@@ -176,6 +200,7 @@
                         <select
                             class="form-select"
                             name="txtdistrict"
+                            required=""
                             >
                             <option>District</option>
                             <option value="1">Dictrict 1</option>
@@ -190,6 +215,7 @@
                         <select
                             class="form-select"
                             name="txtcity"
+                            required=""
                             >
                             <option>City (Province)</option>
                             <option value="1">Ho Chi Minh City</option>

@@ -4,6 +4,7 @@
     Author     : Tan Phat
 --%>
 
+<%@page import="dto.Account"%>
 <%@page import="dto.Order"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
@@ -34,6 +35,31 @@
             href="https://use.fontawesome.com/releases/v6.1.1/css/all.css"
             />
         <link rel="stylesheet" href="./css/navbar.css" />
+        <style>
+            div{
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                color: #333;
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+                text-align: left;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                margin: auto;
+                margin-top: 50px;
+                margin-bottom: 50px;
+            }
+            thead{
+                text-align: center;
+                background-color: rgb(2, 72, 157);
+                color: white;
+            }
+        </style>
     </head>
     <body>
         <header>
@@ -46,14 +72,47 @@
                     <div class="collapse navbar-collapse" id="navbarColor01">
                         <ul class="navbar-nav me-auto nav1">
                             <li class="nav-item text-center">
-                                <a class="nav-link fs-4 fw-bold" href="MainController?action=orderManager" role="button" aria-haspopup="true" aria-expanded="false">Order Manager</a>
+                                <a class="nav-link fs-4 fw-bold" href="MainController?action=orderManager" role="button" aria-haspopup="true" aria-expanded="false">Order Management</a>
                             </li>
                             <li class="nav-item text-center">
-                                <a class="nav-link fs-4 fw-bold" href="MainController?action=dishManager" role="button" aria-haspopup="true" aria-expanded="false">Dishes Manager</a>
+                                <a class="nav-link fs-4 fw-bold" href="MainController?action=dishManager" role="button" aria-haspopup="true" aria-expanded="false">Dishes Management</a>
                             </li>
                             <li class="nav-item text-center">
-                                <a class="nav-link fs-4 fw-bold" href="MainController?action=userManager" role="button" aria-haspopup="true" aria-expanded="false">User Manager</a>
+                                <a class="nav-link fs-4 fw-bold" href="MainController?action=userManager" role="button" aria-haspopup="true" aria-expanded="false">User Management</a>
                             </li>
+                            <%
+                                Account acc = (Account) session.getAttribute("LoginedUser");
+                                if (acc != null) {
+                                    if (acc.getRole().equals("admin")) {
+                            %>
+                            <li class="nav-item text-center">
+                                <a
+                                    class="nav-link fs-4 fw-bold"
+                                    href="MainController?action=adminindex"
+                                    role="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >
+                                    <i class="fa fa-user"></i>
+                                </a>
+                            </li> 
+                            <%                                }
+                            } else {
+                            %>
+                            <li class="nav-item text-center">
+                                <a
+                                    class="nav-link fs-4 fw-bold"
+                                    href="MainController?action=welcome"
+                                    role="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                    >
+                                    <i class="fa fa-sign-in-alt"></i>
+                                </a>
+                            </li>
+                            <%
+                                }
+                            %>
                         </ul>
                     </div>
                 </div>
@@ -61,77 +120,95 @@
         </header>
         <div class="container mt-4">
             <!-- Search Orders -->
-            <h2>Order Management</h2>
-            <div class="mb-4">
-                <form class="form-inline row" action="OrderManagerServlet" method="GET">
-                    <div class="col-6">
-                        <label for="orderDateFrom" class="mr-2">From Date:</label>
-                        <input type="date" class="form-control mr-2" id="orderDateFrom" name="orderDateFrom">
+            <h1 class="mb-2 fw-bold">Order Management</h1>
+            <div class="background" style="border-collapse: collapse;
+                 width: 100%;
+                 color: #333;
+                 font-family: Arial, sans-serif;
+                 font-size: 16px;
+                 text-align: left;
+                 border-radius: 10px;
+                 overflow: hidden;
+                 box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                 margin: auto;
+                 margin-top: 50px;
+                 padding: 10px;
+                 margin-bottom: 50px;" >
+                <div class="mb-4">
+                    <form class="form-inline row" action="OrderManagerServlet" method="GET">
+                        <div class="col-5">
+                            <label for="orderDateFrom" class="mr-2">From Date:</label>
+                            <input type="date" class="form-control mr-2" id="orderDateFrom" name="orderDateFrom">
+                        </div>
+                        <div class="col-5">
+                            <label for="orderDateTo" class="mr-2">To Date:</label>
+                            <input type="date" class="form-control mr-2" id="orderDateTo" name="orderDateTo">
+                        </div>
+                        <div class="mt-4 col-2">
+                            <input type="hidden" name="action" value="searchByDateRange">
+                            <button type="submit" class="btn btn-primary">Apply</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="mb-4">
+                    <form class="row form-inline" action="OrderManagerServlet" method="GET">
+                        <div class="form-group col-11">
+                            <input type="hidden" name="action" value="searchByCustomerInfo">
+                            <label for="customerInfo" class="mr-2">Search by Phone/Email:</label>
+                            <input type="text" class="form-control mr-2" id="customerInfo" name="customerInfo">
+                        </div>
+                        <div class="col-1">
+                            <button type="submit" class="mt-4 btn btn-primary">Search</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Filter Orders -->
+                <form method="get" action="OrderManagerServlet">
+                    <input type="hidden" name="action" value="filterOrders">
+
+                    <div class="form-group">
+                        <label for="city">City:</label>
+                        <select id="city" name="city" class="form-control" onchange="this.form.submit()">
+                            <option value="">All</option>
+                            <c:forEach var="city" items="${CityList}">
+                                <option value="${city}" ${city eq param.city ? 'selected' : ''}>${city}</option>
+                            </c:forEach>
+                        </select>
                     </div>
-                    <div class="col-6">
-                        <label for="orderDateTo" class="mr-2">To Date:</label>
-                        <input type="date" class="form-control mr-2" id="orderDateTo" name="orderDateTo">
+
+                    <div class="form-group">
+                        <label for="district">District:</label>
+                        <select id="district" name="district" class="form-control" onchange="this.form.submit()">
+                            <option value="">All</option>
+                            <c:forEach var="district" items="${DistrictList}">
+                                <option value="${district}" ${district eq param.district ? 'selected' : ''}>${district}</option>
+                            </c:forEach>
+                        </select>
                     </div>
-                    <div class="mt-2">
-                        <input type="hidden" name="action" value="searchByDateRange">
-                        <button type="submit" class="btn btn-primary">Search</button>
+
+                    <div class="form-group">
+                        <label for="ward">Ward:</label>
+                        <select id="ward" name="ward" class="form-control" onchange="this.form.submit()">
+                            <option value="">All</option>
+                            <c:forEach var="ward" items="${WardList}">
+                                <option value="${ward}" ${ward eq param.ward ? 'selected' : ''}>${ward}</option>
+                            </c:forEach>
+                        </select>
                     </div>
                 </form>
             </div>
-            <div class="mb-4">
-                <form class="form-inline" action="OrderManagerServlet" method="GET">
-                    <input type="hidden" name="action" value="searchByCustomerInfo">
-                    <label for="customerInfo" class="mr-2">Search by Phone/Email:</label>
-                    <input type="text" class="form-control mr-2" id="customerInfo" name="customerInfo">
-                    <button type="submit" class="mt-2 btn btn-primary">Search</button>
-                </form>
-            </div>
+
             <div class="mb-4">
                 <form class="form-inline" action="OrderManagerServlet" method="GET">
                     <input type="hidden" name="action" value="groupByAddress">
                     <button type="submit" class="btn btn-success">Group by Address</button>
                 </form>
             </div>
-
-            <!-- Filter Orders -->
-            <form method="get" action="OrderManagerServlet">
-                <input type="hidden" name="action" value="filterOrders">
-
-                <div class="form-group">
-                    <label for="city">City:</label>
-                    <select id="city" name="city" class="form-control" onchange="this.form.submit()">
-                        <option value="">All</option>
-                        <c:forEach var="city" items="${CityList}">
-                            <option value="${city}" ${city eq param.city ? 'selected' : ''}>${city}</option>
-                        </c:forEach>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="district">District:</label>
-                    <select id="district" name="district" class="form-control" onchange="this.form.submit()">
-                        <option value="">All</option>
-                        <c:forEach var="district" items="${DistrictList}">
-                            <option value="${district}" ${district eq param.district ? 'selected' : ''}>${district}</option>
-                        </c:forEach>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="ward">Ward:</label>
-                    <select id="ward" name="ward" class="form-control" onchange="this.form.submit()">
-                        <option value="">All</option>
-                        <c:forEach var="ward" items="${WardList}">
-                            <option value="${ward}" ${ward eq param.ward ? 'selected' : ''}>${ward}</option>
-                        </c:forEach>
-                    </select>
-                </div>
-            </form>
-
             <!-- Display Orders -->
             <c:choose>
                 <c:when test="${not empty OrderList}">
-                    <h2>Order List</h2>
+                    <h1 class="mb-2 fw-bold">Order List</h1>
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -254,41 +331,41 @@
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="//cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
         <script>
-                        $(document).ready(function () {
-                            $(".status-select").change(function () {
-                                var form = $(this).closest(".status-update-form");
-                                var orderId = form.data("order-id");
-                                var status = $(this).val();
+                            $(document).ready(function () {
+                                $(".status-select").change(function () {
+                                    var form = $(this).closest(".status-update-form");
+                                    var orderId = form.data("order-id");
+                                    var status = $(this).val();
 
-                                $.ajax({
-                                    type: "POST",
-                                    url: "OrderManagerServlet",
-                                    data: {
-                                        action: "updateStatus",
-                                        orderId: orderId,
-                                        status: status
-                                    },
-                                    success: function (response) {
-                                        // Cập nhật trạng thái trong cột "Status"
-                                        var statusText;
-                                        if (status == 1) {
-                                            statusText = "Pending";
-                                        } else if (status == 2) {
-                                            statusText = "Delivery";
-                                        } else if (status == 3) {
-                                            statusText = "Completed";
-                                        } else {
-                                            statusText = "Unknown";
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "OrderManagerServlet",
+                                        data: {
+                                            action: "updateStatus",
+                                            orderId: orderId,
+                                            status: status
+                                        },
+                                        success: function (response) {
+                                            // Cập nhật trạng thái trong cột "Status"
+                                            var statusText;
+                                            if (status == 1) {
+                                                statusText = "Pending";
+                                            } else if (status == 2) {
+                                                statusText = "Delivery";
+                                            } else if (status == 3) {
+                                                statusText = "Completed";
+                                            } else {
+                                                statusText = "Unknown";
+                                            }
+                                            $("#status-" + orderId).text(statusText);
+                                            alert("Order status updated successfully!");
+                                        },
+                                        error: function () {
+                                            alert("Failed to update order status. Please try again.");
                                         }
-                                        $("#status-" + orderId).text(statusText);
-                                        alert("Order status updated successfully!");
-                                    },
-                                    error: function () {
-                                        alert("Failed to update order status. Please try again.");
-                                    }
+                                    });
                                 });
                             });
-                        });
         </script>
     </body>
 </html>
